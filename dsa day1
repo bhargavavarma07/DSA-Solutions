@@ -1,0 +1,42 @@
+"Check if a string is palindrome or not":
+3 solutions:
+1)//using list,O(n) T.c and O(n) S.C
+class Solution:
+    def isPalindrome(self, s: str) -> bool:
+        text = s.lower()
+        text2 = []  # Use list instead
+        
+        for i in text:
+            if i.isalnum():
+                text2.append(i)  # O(1) append
+        
+        # Compare list with its reverse
+        return text2 == text2[::-1]
+2)//O(n) T.c and O(n) S.C
+//using negation in the string,here s[~1]=s[-1]
+class Solution:
+    def isPalindrome(self, s: str) -> bool:
+        text=[c.lower() for c in s if(c.isalnum())]
+        for i in range(0,len(text)//2):
+            if(text[i]!=text[~i]):
+                return False
+        return True
+3)//O(n) T.c and O(1) S.C
+//by using two pointer approach
+class Solution:
+    def isPalindrome(self, s: str) -> bool:
+        i,j=0,len(s)-1
+        while i<j:
+            while i<j and not s[i].isalnum():
+                i+=1
+            while i<j and not s[j].isalnum():
+                j-=1
+            if(s[i].lower()!=s[j].lower()):
+                return False
+            i+=1
+            j-=1
+        return True    
+        
+        
+        
+        
