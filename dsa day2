@@ -1,0 +1,40 @@
+fibonaci:
+1)
+class Solution:
+    def fib(self, n: int) -> int:
+        a,b=0,1
+        if(n<2):
+            return(n)
+        for i in range(2,n+1):
+            x=a
+            a=b
+            b=x+b
+        return (b)
+2)
+//using dynamic programing
+class Solution:
+    def fib(self, n: int) -> int:
+        dp=[0,1]
+        for i in range(2,n+1):
+            dp.append(dp[i-1]+dp[i-2])
+        return dp[n]
+3)
+//using recursion
+class Solution:
+    def fib(self, n: int) -> int:
+        if(n==0):
+            return 0
+        if(n==1):
+            return 1
+        return self.fib(n-1)+self.fib(n-2)
+_________________________________________________________________________________________________________
+Hashing:it is combination of 2 steps ,they are precomputing and fetching
+Frequencies in a Limited Array:
+class Solution:
+    def frequencyCount(self, arr):
+        #  code here
+        result=[0 for i in range(len(arr))]
+        for i in arr:
+            result[i-1]+=1
+        return result
+
