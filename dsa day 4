@@ -1,0 +1,25 @@
+rotation of arrays and moving 0's to rigth most of the array and and leaving remaining elements at first(leetcode 283):
+class Solution:
+    def moveZeroes(self, nums: List[int]) -> None:
+        """
+        Do not return anything, modify nums in-place instead.
+        """
+        ct=0
+        a=[0]*len(nums)
+        for i in range(len(nums)):
+            if(nums[i]==0):
+                ct+=1
+            a[i]=nums[i]
+        j=0
+        for i in range(len(nums)):
+            if(a[i]!=0):
+                nums[j]=a[i]
+                j+=1
+            
+        for i in range(len(nums)-ct,len(nums)):
+            nums[i]=0
+
+
+        
+
+        
