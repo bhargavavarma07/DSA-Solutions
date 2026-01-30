@@ -18,6 +18,26 @@ class Solution:
             
         for i in range(len(nums)-ct,len(nums)):
             nums[i]=0
+---------------------------------------------------------
+ rotate the array to the right by k steps (leetcode 189 [medium])
+class Solution:
+    def rotate(self, nums: List[int], k: int) -> None:
+        """
+        Do not return anything, modify nums in-place instead.
+        """
+        a=[0]*len(nums)
+        for i in range(len(nums)):
+            a[i]=nums[i]
+
+        for i in range(len(nums)):
+            nums[i]=a[(i+(len(nums)-k))%len(nums)]
+        
+        
+    
+        
+        
+
+
 
 
         
