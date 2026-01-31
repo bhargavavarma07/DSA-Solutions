@@ -1,0 +1,23 @@
+selection sort:
+class Solution: 
+    def selectionSort(self, arr):
+        #code here
+        min_=99909999
+        for i in range(len(arr)):
+            for j in range(i,len(arr)):
+                if(arr[j]<min_):
+                    pos=j
+                    min_=arr[j]
+            arr[i],arr[pos]=arr[pos],arr[i]
+            min_=99999999
+bubble sort:
+class Solution:
+    def bubbleSort(self,arr):
+        # code here
+        for j in range(len(arr)):
+            for i in range(len(arr)-1):
+                if(arr[i]>arr[i+1]):
+                    arr[i],arr[i+1]=arr[i+1],arr[i]
+
+            
+        
