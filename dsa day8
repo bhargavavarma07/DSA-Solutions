@@ -1,0 +1,21 @@
+Quick sort implementation:
+class Solution:
+    def quickSort(self, arr, low, high):
+        #code here 
+        if(low<high):
+            pi=high
+            i=low-1
+            j=low
+            while(j<high):
+                if(arr[j]<arr[pi]):
+                    i+=1
+                    arr[i],arr[j]=arr[j],arr[i]
+                    j+=1
+                else:
+                    j+=1
+            arr[i+1],arr[pi]=arr[pi],arr[i+1]
+            pi=i+1
+            self.quickSort(arr,low,i)
+            self.quickSort(arr,i+2,high)
+
+    
