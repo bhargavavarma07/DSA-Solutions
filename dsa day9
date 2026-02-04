@@ -1,0 +1,29 @@
+two sum:
+//bruteforce approach
+class Solution:
+    def twoSum(self, nums: List[int], target: int) -> List[int]:
+        for i in range(len(nums)):
+            for j in range(i+1,len(nums)):
+                if((nums[i]+nums[j])==target):
+                    return [i,j]
+//using hash map
+class Solution:
+    def twoSum(self, nums: List[int], target: int) -> List[int]:
+        d={}
+        for i in range(len(nums)):
+            d[nums[i]]=i
+        for i in range(len(nums)):
+            complement=target - nums[i]
+            if complement in d and d[complement]!=i:
+                return [d[complement],i]
+            
+//or
+class Solution:
+    def twoSum(self, nums: List[int], target: int) -> List[int]:
+        d={}
+        for i in range(len(nums)):
+            complement=target - nums[i]
+            if complement in d :
+                return [d[complement],i]
+            d[nums[i]]=i
+            
