@@ -1,0 +1,16 @@
+
+leet code ,121. Best Time to Buy and Sell Stock:
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        mn=prices[0]
+        mx=0
+        for i in prices:
+
+            if(i<mn):
+                mn=i
+            else:
+                p=i-mn
+                if(p>=mx):
+                    mx=p
+        return mx
+
