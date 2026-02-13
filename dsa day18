@@ -1,0 +1,16 @@
+560. Subarray Sum Equals K
+//optimal
+class Solution:
+    def subarraySum(self, nums: List[int], k: int) -> int:
+        d={0:1}
+        ct=0
+        s=0
+        for i in range(len(nums)):
+            s+=nums[i]
+            remove=s-k
+            if(remove in d):
+                ct+=d[remove]
+            d[s]=1+d.get(s,0)
+        return ct
+
+                    
