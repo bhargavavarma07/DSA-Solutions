@@ -1,0 +1,83 @@
+31 .next_permutation : find next lexicographically greater permutation
+//Brute force approach
+Algorithm
+The brute force approach to find the next permutation is to find all possible permutations of the array and then look for next permutation.
+Find all possible permutations of elements present and store them.
+Sort the permutations and search input from all possible permutations. Print the next permutation present right after it.
+If the current permutation is the last, return the first permutation in the list.
+
+//brute force code
+from itertools import permutations
+
+class Solution:
+    # Function to find the next permutation
+    def nextPermutation(self, nums):
+        # Generate all unique permutations
+        perms = sorted(set(permutations(nums)))
+
+        # Convert list to tuple for comparison
+        current = tuple(nums)
+
+        # Traverse the list
+        for i in range(len(perms)):
+            if perms[i] == current:
+                # If last permutation, return first
+                if i == len(perms) - 1:
+                    return list(perms[0])
+                # Else return next
+                return list(perms[i + 1])
+
+        return nums
+
+# Driver code
+sol = Solution()
+nums = [1, 2, 3]
+result = sol.nextPermutation(nums)
+print(" ".join(map(str, result)))
+----------------------------------------------------------------
+Complexity Analysis:
+Time Complexity: O(N!*N), since we are generating all possible permutations, it takes N! time.
+Space Complexity: O(N!), storing all permutations.
+///////////////////////////////////////////////////////////////////////////////////////////////
+optimal approach:
+
+algorithm:
+We want to rearrange the array to form the next greater permutation. If that's not possible (i.e., it's the last permutation), we return the smallest one (i.e., sorted ascendingly).
+
+To find this next permutation with minimal change, we need to find a digit that can be increased slightly to make the number bigger and then rearrange the remaining part to be the smallest possible.
+Traverse from the end and find the first index where the current digit is smaller than the next one (this is the "breaking point").
+Then again traverse from the end to find the first digit greater than the breaking point digit and swap them.
+Finally, reverse the part of the array to the right of the breaking point to get the smallest next permutation.
+If no such breaking point exists (entire array is descending), just reverse the whole array.
+
+code:
+
+
+class Solution:
+    def nextPermutation(self, nums: List[int]) -> None:
+        """
+        Do not return anything, modify nums in-place instead.
+        """
+        index=-1
+        n=len(nums)
+        for i in range(n-2,-1,-1):
+            if(nums[i]<nums[i+1]):
+                index=i
+                break
+        if (index==-1):
+            nums.reverse()
+            return
+        for i in range(n-1,index,-1):
+            if(nums[index]<nums[i]):
+                nums[index],nums[i]=nums[i],nums[index]
+                break
+        left=index+1
+        right=n-1
+        while(left<right):
+            nums[left],nums[right]=nums[right],nums[left]
+            left+=1
+            right-=1
+------------------------------------------
+Complexity Analysis
+Time Complexity: O(N), we find the breaking point and reverse the subarray in linear time.
+Space Complexity: O(1), constant additional space is used.
