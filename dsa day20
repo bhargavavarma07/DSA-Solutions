@@ -1,0 +1,159 @@
+Leaders in an Array:
+//brute force approach:try all ,T.C:O(N^2)
+code here
+        ans=[]
+        for i in range(len(arr)):
+            flag=1
+            for j in range(i+1,len(arr)):
+                if(arr[i]<arr[j]):
+                    flag=-1
+                    break
+            if(flag==1):
+                ans.append(arr[i])
+        return ans
+//optimal approach:traverse from back side with updated max element ,T.C:O(N)
+ ans=[]
+        ans.append(arr[-1])
+        mx=arr[-1]
+        n=len(arr)
+        for i in range(n-2,-1,-1):
+            if(arr[i]>=arr[i+1] and arr[i]>=mx):
+                mx=arr[i]
+                ans.append(arr[i])
+        return ans[::-1]
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+128.Longest Consecutive Sequence in an Array:
+
+Problem Statement: Given an array nums of n integers.
+
+Return the length of the longest sequence of consecutive integers. The integers in this sequence can appear in any order.
+i)Brute Force
+Algorithm
+As you iterate through each number in the array, begin by checking if consecutive numbers like (x+1, x+2, x+3), and so on, exist in the array. The occurrence of the next consecutive number can be checked by using a linear search.
+When you find consecutive numbers, start counting them using a counter. Increment this counter each time you find the next consecutive number in the sequence.
+This counter effectively keeps track of how long the current consecutive sequence is as you move through the array and find more consecutive numbers.
+Dry Run: Please refer to the video for the dry run.
+
+code:
+class Solution:
+    # Helper function to perform linear search
+    def linearSearch(self, nums, num):
+        n = len(nums)
+        # Traverse through the array
+        for i in range(n):
+            if nums[i] == num:
+                return True
+        return False
+
+    def longestConsecutive(self, nums):
+        # If the array is empty
+        if len(nums) == 0:
+            return 0
+        n = len(nums)
+        # Initialize the longest sequence length
+        longest = 1
+
+        # Iterate through each element in the array
+        for i in range(n):
+            # Current element
+            x = nums[i]
+            # Count of the current sequence
+            cnt = 1
+
+            # Search for consecutive numbers
+            while self.linearSearch(nums, x + 1):
+                # Move to the next number in the sequence
+                x += 1
+                # Increment the count of the sequence
+                cnt += 1
+
+            # Update the longest sequence length found so far
+            longest = max(longest, cnt)
+        return longest
+
+if __name__ == "__main__":
+    a = [100, 4, 200, 1, 3, 2]
+
+    # Create an instance of the Solution class
+    solution = Solution()
+
+    # Function call for longest consecutive sequence
+    ans = solution.longestConsecutive(a)
+    print("The longest consecutive sequence is", ans)
+-----------------------------------------------------------------
+Complexity Analysis
+Time Complexity: O(n2), where n is the number of elements in the array. This is because for each element, we may need to perform a linear search through the entire array to find consecutive numbers.
+
+Space Complexity: O(1), as we are using a constant amount of extra space for variables.
+============================================================================
+ii)Better Approach
+Algorithm
+Begin by sorting the entire array in ascending order. This step helps group consecutive numbers together, simplifying the sequence detection process.
+Use a loop to iterate through each element of the sorted array.
+Track consecutive sequences by comparing each element arr[i] with the lastSmaller variable. If arr[i] - 1 == lastSmaller, increment the length of the current sequence (cnt) and update lastSmaller to arr[i].
+Skip the current element if arr[i] equals lastSmaller, as it's already part of a sequence.
+If arr[i] is greater than lastSmaller + 1, start a new sequence from arr[i] by updating lastSmaller to arr[i] and reset cnt to 1.
+Throughout the iteration, compare cnt with longest and update longest to store the maximum sequence length encountered.
+Note: Here, we are distorting the given array by sorting it.
+
+code:
+class Solution:
+    def longestConsecutive(self, nums: List[int]) -> int:
+        ct=0
+        mx=1
+        if(len(nums)==0):
+            return 0
+        nums.sort()
+        for i in range(len(nums)-1):
+            if(nums[i]==nums[i+1]):
+                continue
+            elif(nums[i]+1==nums[i+1]):
+                ct+=1
+            else:
+                if(ct>=mx):
+                    mx=ct+1
+                ct=0
+        if(ct>=mx):
+            mx=ct+1
+        return mx
+--------------------------------------------
+Complexity Analysis
+Time Complexity: O(n log n), where n is the number of elements in the array. This is due to the sorting step, which is the most time-consuming operation in this approach.
+
+Space Complexity: O(1), as we are using only a constant amount of extra space.
+================================================================
+iii)Optimal Approach
+Algorithm
+We will use two variables: cnt to store the length of the current sequence and longest to store the maximum length found.
+First, place all the array elements into a set data structure to allow efficient lookups for consecutive numbers.
+For each element x that can start a sequence (i.e., x - 1 does not exist in the set), we follow these steps:
+Initialize cnt to 1, indicating the starting element of a new sequence.
+Use the set to search for consecutive elements such as x + 1, x + 2, and so on, to determine the maximum possible length of the current sequence. Update cnt accordingly.
+Compare cnt with longest and update longest to hold the maximum value: longest = max(longest, cnt).
+Finally, longest will contain the length of the longest consecutive sequence found in the array.
+
+code:
+class Solution:
+    def longestConsecutive(self, nums: List[int]) -> int:
+        n=len(nums)
+        if(n==0):
+            return 0
+        mx=1
+        st=set()
+        for i in nums:
+            st.add(i)
+        for i in st:
+            if(i-1 not in st):
+                x=i
+                ct=1
+                while(x+1 in st):
+                    ct+=1
+                    x=x+1
+                mx=max(ct,mx)
+        return mx
+------------------------------------------------------------------
+Complexity Analysis
+Time Complexity: O(n), where n is the number of elements in the array. This is because we traverse each element once to build the set and then again to find the longest consecutive sequence.
+
+Space Complexity: O(n), as we use a set to store the unique elements of the array, which in the worst case can be equal to the size of the input array.
+==============================================================
