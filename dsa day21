@@ -1,0 +1,107 @@
+LC 73)Set Matrix Zero
+Problem Statement: Given a matrix if an element in the matrix is 0 then you will have to set its entire column and row to 0 and then return the matrix..
+//brute force
+Algorithm:
+Think of the matrix as a chessboard. If you see a zero somewhere, you need to wipe out its whole row and column to zero. In brute force, the moment you find a zero, you immediately mark its entire row and column. But here’s the trap if you set them to zero immediately, we might mess up future checks because a newly placed zero could cause extra unwanted zeroing. To avoid that, we use a special marker value (like -1 or something that can’t exist in the input) to mark places where zeros should be placed later. Once the scanning is done, we do a second pass and replace all markers with 0.
+Traverse the entire matrix.
+If an element is zero:
+Mark all elements in its row (except already zero) as -1.
+Mark all elements in its column (except already zero) as -1.
+Once the full traversal is complete, replace all -1 with 0.
+
+Code:
+//with S.C:O(1)
+class Solution:
+     # Function to set entire row and column to 0 if an element in the matrix is 0
+    def setZeroes(self, matrix):
+        # Get number of rows
+        m = len(matrix)
+        # Get number of columns
+        n = len(matrix[0])
+
+        # First pass: mark rows and columns
+        for i in range(m):
+            for j in range(n):
+                # If current cell is zero
+                if matrix[i][j] == 0:
+                    # Mark entire row
+                    for col in range(n):
+                        if matrix[i][col] != 0:
+                            matrix[i][col] = -1
+                    # Mark entire column
+                    for row in range(m):
+                        if matrix[row][j] != 0:
+                            matrix[row][j] = -1
+
+        # Second pass: replace -1 with 0
+        for i in range(m):
+            for j in range(n):
+                if matrix[i][j] == -1:
+                    matrix[i][j] = 0
+
+# Driver code
+matrix = [[1,1,1],[1,0,1],[1,1,1]]
+sol = Solution()
+sol.setZeroes(matrix)
+for row in matrix:
+    print(row)
+
+
+// with S.C:O(m+n)
+class Solution:
+    def setZeroes(self, matrix: List[List[int]]) -> None:
+        """
+        Do not return anything, modify matrix in-place instead.
+        """
+        rpoints=[]
+        cpoints=[]
+        for r in range(len(matrix)):
+            for c in range(len(matrix[0])):
+                if(matrix[r][c]==0):
+                    rpoints.append(r)
+                    cpoints.append(c)
+        for r in range(len(matrix)):
+            for c in range(len(matrix[0])):
+                if(r in rpoints):
+                    for c1 in range(len(matrix[0])):
+                        matrix[r][c1]=0
+                elif(c in cpoints):
+                    for r1 in range(len(matrix)):
+                        matrix[r1][c]=0
+------------------------------------------------------------------------
+Time Complexity: O(m * n * (m + n)), We iterate through every cell (m * n), and for each zero, we potentially mark its entire row (O(n)) and column (O(m)), leading to O(m * n * (m + n)) overall.
+==========================================================================================================
+Better Approach
+Algorithm
+Instead of marking directly in the matrix, keep two extra arrays:
+One to track which rows need to be zeroed.
+One to track which columns need to be zeroed.
+When you find a zero, mark its row index in the row array and column index in the col array. After the scan, you go back and zero out all marked rows and columns. This avoids accidental over-zeroing in the first pass.
+Create a row array of size m (rows) and a col array of size n (columns) initialized to false.
+First pass: Traverse the matrix, and when you find a zero:
+Mark the corresponding row index in row array.
+Mark the corresponding col index in col array.
+Second pass: Traverse the matrix again, and if either the row or col is marked, set the cell to zero.
+
+code:
+class Solution:
+    def setZeroes(self, matrix: List[List[int]]) -> None:
+        """
+        Do not return anything, modify matrix in-place instead.
+        """
+        rpoints=[]
+        cpoints=[]
+        for r in range(len(matrix)):
+            for c in range(len(matrix[0])):
+                if(matrix[r][c]==0):
+                    rpoints.append(r)
+                    cpoints.append(c)
+        for r in range(len(matrix)):
+            for c in range(len(matrix[0])):
+                if(r in rpoints or c in cpoints):
+                    matrix[r][c]=0
+                    
+-----------------------------------------------------------------------------------------------------
+Time Complexity: O(m × n),We make two passes over the matrix.First pass to identify rows and columns to be zeroed (O(m × n)).Second pass to update the matrix using the markers (O(m × n)).Total time is proportional to the number of cells in the matrix, so O(m × n).
+Space Complexity: O(m + n),We store two extra arrays one for m rows and one for n columns. No other extra space is used besides these arrays.
+==================================================================================================================================================
