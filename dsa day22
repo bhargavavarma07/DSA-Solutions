@@ -1,0 +1,143 @@
+Q)Set Matrix Zero:
+Problem Statement: Given a matrix if an element in the matrix is 0 then you will have to set its entire column and row to 0 and then return the matrix.
+optimal:
+
+Algorithm:
+Instead of using separate arrays, we use the first row and first column of the matrix itself to store whether a row or column needs to be zeroed. We also store two flags:
+firstRowZero:Was the first row supposed to be all zero?
+firstColZero:Was the first column supposed to be all zero?
+Then:
+First pass: Mark zeros in the first row and column for any zero found in the rest of the matrix.
+Second pass: Use those markers to set rows and columns to zero.
+Finally, handle the first row and column separately based on the flags. This is super space-efficient because we’re reusing the input matrix itself to store markers.
+Check if the first row has any zero and store in a boolean flag.
+Check if the first column has any zero and store in a boolean flag.
+Traverse the rest of the matrix:
+If a cell is zero, mark its row in the first column and its column in the first row as zero.
+Traverse again (excluding first row and column), setting cells to zero if their row marker or column marker is zero.
+Finally, update the first row and first column based on the stored flags.
+
+code:
+class Solution:
+    def setZeroes(self, matrix: List[List[int]]) -> None:
+        """
+        Do not return anything, modify matrix in-place instead.
+        """
+        firstRow=1
+        firstCol=1
+        #rowArr=matrix[0][..]
+        #colArr=matrix[..][0]
+        for r in range(len(matrix)):
+            for c in range(len(matrix[0])):
+                if(matrix[0][c]==0):
+                    firstRow=0
+                if(matrix[r][0]==0):
+                    firstCol=0
+        for r in range(1,len(matrix)):
+            for c in range(1,len(matrix[0])):
+                if(matrix[r][c]==0):
+                    matrix[0][c]=0
+                    matrix[r][0]=0
+        for r in range(1,len(matrix)):
+            for c in range(1,len(matrix[0])):
+                if(matrix[0][c]==0 or matrix[r][0]==0):
+                    matrix[r][c]=0
+        for r in range(len(matrix)):
+            for c in range(len(matrix[0])):
+                if(firstRow==0):
+                    matrix[0][c]=0
+                if(firstCol==0):
+                    matrix[r][0]=0
+
+-----------------------------------------------------------------------------------------------
+Complexity Analysis
+Time Complexity: O(m × n),We iterate over the entire matrix a constant number of times (first pass for markers, second pass for zeroing, final pass for first row/col), where m = number of rows and n = number of columns.
+
+Space Complexity: O(1),No extra space is used apart from a few boolean flags; all marker information is stored within the first row and column of the matrix itself.
+========================================================================================================
+
+///////////////////////////////////////////////////////////////////////////////////////
+L.C Q48)Rotate Image by 90 degree
+
+Problem Statement: Given an N * N 2D integer matrix, rotate the matrix by 90 degrees clockwise. The rotation must be done in place, meaning the input 2D matrix must be modified directly..
+
+Brute Force Approach
+Algorithm
+In a 90-degree clockwise rotation, each element in the matrix moves from its original position to a new position based on a specific pattern. The first column becomes the first row (in reverse order) and second column becomes the second row, and so on.
+We can simulate this movement by using a new matrix. For each element at position (i, j) in the original matrix, we calculate its new position in the rotated matrix as (j, n - i - 1) where n is the size of the matrix.
+Initialize an empty matrix of the same size (n x n).
+Loop through every element of the original matrix using two nested loops.
+For each element at position (i, j), place it in the new matrix at position (j, n - i - 1).
+After completing the placement for all elements, return or copy the new matrix.
+
+code:
+class Solution:
+    def rotate(self, matrix: List[List[int]]) -> None:
+        """
+        Do not return anything, modify matrix in-place instead.
+        """
+        n=len(matrix)
+        m=len(matrix[0])
+        ans=[[0]*n for _ in range(m)]
+        for r in range(len(matrix)):
+            for c in range(len(matrix[0])):
+                ans[r][c]=matrix[r][c]
+        
+        print(ans)
+        print(matrix)
+        for r in range(len(matrix)):
+            k=n-1
+            for c in range(len(matrix[0])):
+                matrix[r][c]=ans[k][r]
+                k-=1
+
+-----------------------------------------------------------
+Complexity Analysis
+
+Time Complexity: O(N²),Each element of the matrix is visited exactly once and placed into a new matrix, so the time taken is proportional to the total number of elements.
+
+Space Complexity: O(N²),We use an additional matrix of the same size to store the rotated result, leading to O(N²) extra space.
+=============================================================================================================
+
+
+Optimal Approach:
+
+Algorithm:
+To rotate a matrix 90 degrees clockwise in-place (without using extra space), we use two key matrix operations:
+Step 1: Transpose the matrix: swap elements across the diagonal. This converts rows into columns.
+Step 2: Reverse each row: this turns the new columns into the final rotated rows.
+
+This works because:
+Transposing moves elements from (i, j) to (j, i), effectively rotating across the diagonal.
+Reversing the rows repositions the elements in each row, finalizing the clockwise rotation.
+Get the size of the square matrix (number of rows or columns).
+Start the first phase: Transpose the matrix
+For each row starting from the top to bottom:
+For each column starting from the diagonal element (excluding already visited elements):
+Swap the current element with the element that is diagonally opposite across the main diagonal.
+This effectively flips the matrix over its top-left to bottom-right diagonal, converting rows into columns.
+Move to the second phase: Reverse each row
+For every row in the matrix:
+Reverse the order of the elements in that row (first element becomes last, second becomes second last, and so on).
+This realigns the columns to their correct position for the clockwise rotation.
+Once both phases are done, the matrix will have been rotated 90 degrees clockwise in-place.
+
+code:
+class Solution:
+    def rotate(self, matrix: List[List[int]]) -> None:
+        """
+        Do not return anything, modify matrix in-place instead.
+        """
+        for i in range(len(matrix)):
+            for j in range(i+1,len(matrix)):
+                matrix[i][j],matrix[j][i]=matrix[j][i],matrix[i][j]
+        print(matrix)
+        for r in range(len(matrix)):
+            matrix[r].reverse()
+
+---------------------------------------------------------------
+Complexity Analysis
+
+Time Complexity: O(N²),We traverse every element once during transposition and again during reversal of each row, resulting in a total of O(N²) time.
+
+Space Complexity: O(1),All operations are done in-place using only temporary variables. No extra matrix is used.
