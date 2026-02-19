@@ -1,0 +1,81 @@
+118.Pascals trianglle:
+interviewer can ask this in three different ways:
+1)by giving rth row and cth column and asking to find out the corresponding element:
+Approach:
+in this we will use nCr formula ,to get that element,
+we get it by using (r-1)C(c-1),where r is the rth row and c is the cth column
+Code:
+i)we can define a factorial function and use it in the formula,but it is way too complex and takes more time
+ii)we will use following code to calculate ncr:
+def func_ncr(self,n,p):
+        ans=1
+        for i in range(p):
+            ans=ans*(n-i)
+            ans=ans//(i+1)
+        return(ans)
+    #(r-1)C(c-1) will give the number in the pascals triangle at rth row and c th column    
+
+2)by giving the row number and asking to generate entire row,:
+Approaches:
+i)we may use above ncr formula to by iterating a loop from 1 to given row number(because number of columns or elements in a row is equal to the given row number)
+ but it is some what complex because we will be calculating same thing over and over,for example if row=5
+1,(5)/(1),(5*4)/(1*2),(5*4*3)/(1*2*3),(5*4*3*2)/(1*2*3*4),(5*4*3*2*1)/(1*2*3*4*5)
+code:
+for  i in range(1,n+1):
+  print(func_ncr(n-1,c-1))
+---------
+Time complexity:
+O(n*r)
+===========
+ii)to optimize it what we will do is,we will analyze the above pattern,and implent it in one loop
+
+ans=1
+for i in range(1,n+1):
+  ans=ans*(n-i)
+  ans=ans//i
+  print(ans)
+------------
+Time complexity:
+O(n)
+===============================================
+3)they may ask to print entire triang by pushing lists into list and returning it
+
+Approaches:
+
+i)Brute force approach:
+by using function ncr
+
+code:
+def func_ncr(self,n,p):
+        ans=1
+        for i in range(p):
+            ans=ans*(n-i)
+            ans=ans//(i+1)
+        return(ans)
+    #(r-1)C(c-1) will give the number in the pascals triangle at rth row and c th column    
+--------------
+Time complexity:
+O(n*n*r)orO(n^3)
+==============
+ii)optimal approach:
+we may use above optimal process or we may add the elemnts to get like below code
+
+code:
+class Solution:
+    def generate(self, numRows: int) -> List[List[int]]:
+        ans=[[1]]
+        prev=[]
+        for i in range(numRows-1):
+            x=[1]
+            j,k=0,1
+            while(k<=i):
+                x.append(prev[j]+prev[k])
+                j+=1
+                k+=1
+            x.append(1)
+            prev=x
+            ans.append(x)
+        return ans
+
+        
+
