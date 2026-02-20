@@ -1,0 +1,127 @@
+Majority Elements(&gt;N/3 times) | Find the elements that appears more than N/3 times in the array
+Problem Statement: Given an integer array nums of size n. Return all elements which appear more than n/3 times in the array. The output can be returned in any order.
+
+Brute Force
+Algorithm
+Can there be more than 2 majority elements?
+To understand why there can't be more than two majority elements (elements that appear more than n/3 times) in an array of size n, let's consider the following reasoning:
+A majority element must appear more than n/3 times. Let’s assume there are more than two majority elements, say A, B, and C.
+The combined frequency of these three elements would be: frequency of A + frequency of B + frequency of C > n/3 + n/3 + n/3 = n.
+Since the total occurrences of all elements cannot exceed n (the size of the array), the combined frequency of any three elements each appearing more than n/3 times would exceed the total size of the array, leading to a contradiction.
+Therefore, it is mathematically impossible to have more than two elements that each appear more than n/3 times in the array.
+Approach:
+Iterate through the array and select each element one by one.
+For each unique element, run another loop to count its occurrences in the array.
+If any element occurs more than floor(N/3) times, include it in the result array.
+If a previously included element is found during traversal, skip it to avoid counting duplicates.
+If the result array already contains 2 elements, break out of the loop, as there can’t be more than two majority elements.
+Return the result array containing the majority elements or return -1 if no such element is found.
+
+Code:
+class Solution:
+    def majorityElement(self, nums: List[int]) -> List[int]:
+        ans=[]
+        ct=0
+        n=len(nums)
+        for i in range(n):
+            ct=1
+            for j in range(i+1,n):
+                if(nums[i]==nums[j]):
+                    ct+=1
+            if(ct>(n/3)):
+                if(nums[i] not in ans):
+                    ans.append(nums[i])   
+        return ans 
+
+-------------------------------------------------
+Complexity Analysis
+Time Complexity: O(N^2), where N is the size of the array. This is because for each element, we are traversing the entire array to count its occurrences.
+
+Space Complexity: O(1), as we are using a constant amount of space for the result array, which can hold at most 2 elements.
+=============================================================
+
+Better Approach
+Algorithm
+Use a hashmap (or a frequency array if the array size is small) to store the elements as key-value pairs, where the key is the element and the value is the number of times it occurs in the array.
+Traverse the entire array, updating the occurrences of each element in the hashmap.
+After the traversal, check the hashmap to see if any element's value (frequency) is greater than the floor of N/3. If it is, include the element in the answer array.
+If the size of the answer array reaches 2, break out of the loop, as there cannot be more than two majority elements.
+Finally, return the answer array containing the majority elements. If no such elements are found, return -1.
+
+Code:
+class Solution:
+    def majorityElement(self, nums: List[int]) -> List[int]:
+        ans=[]
+        n=len(nums)
+        ct=0
+        d={}
+        for i in nums:
+            ct=1
+            if(i in d.keys()):
+                ct+=d[i]
+            d[i]=ct
+        for i in d:
+            if(d[i]>(n/3)):
+                ans.append(i)
+        return ans
+
+---------------------------------------
+Complexity Analysis
+Time Complexity: O(N * logN), where N is the size of the given array. For using a map data structure, where insertion in the map takes logN time, and we are doing it for N elements. So, it results in the first term O(N * logN). On using unordered_map instead, the first term will be O(N) for the best and average case, and for the worst case, it will be O(N2).
+
+Space Complexity: O(N) for using a map data structure. A list that stores a maximum of 2 elements is also used, but that space used is so small that it can be considered constant.
+========================================================
+
+Optimal Approach
+Algorithm
+Initialize four variables: cnt1 and cnt2 for tracking the counts of elements, and el1 and el2 for storing the potential majority elements.
+Traverse through the given array:
+If cnt1 is 0 and the current element is not equal to el2, set el1 to the current element and increment cnt1 by 1.
+If cnt2 is 0 and the current element is not equal to el1, set el2 to the current element and increment cnt2 by 1.
+If the current element is equal to el1, increment cnt1 by 1.
+If the current element is equal to el2, increment cnt2 by 1.
+In all other cases, decrease cnt1 and cnt2 by 1.
+After processing all elements, el1 and el2 should be the candidate elements for majority. To confirm:
+Use another loop to manually check the counts of el1 and el2 in the array.
+If either el1 or el2's count is greater than floor(N/3), it is considered a valid majority element.
+
+code:
+class Solution:
+    def majorityElement(self, nums: List[int]) -> List[int]:
+        ans=[]
+        n=len(nums)
+        ct1,ct2=0,0
+        el1,el2=float('-inf'),float('-inf')
+        for i in range(len(nums)):
+            if(ct1==0 and el2!=nums[i]):
+                ct1=1
+                el1=nums[i]
+            elif(ct2==0 and el1!=nums[i]):
+                ct2=1
+                el2=nums[i]
+            elif(nums[i]==el1):
+                ct1+=1
+            elif(nums[i]==el2):
+                ct2+=1
+            else:
+                ct1-=1
+                ct2-=1
+        ct1,ct2=0,0
+        for i in nums:
+            if(el1==i):
+                ct1+=1
+            if(el2==i):
+                ct2+=1
+        mn=(n//3)
+        if(ct1>mn):
+            ans.append(el1)
+        if(ct2>mn and el2!=el1):
+            ans.append(el2)
+        return ans
+
+--------------------------------
+Complexity Analysis
+Time Complexity: O(N), where N is the size of the input array. We traverse the array twice: once to find potential candidates and once to validate them.
+
+Space Complexity: O(1), as we are using a constant amount of space for the counters and candidate elements, regardless of the input size.
+==============================
