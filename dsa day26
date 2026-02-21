@@ -1,0 +1,97 @@
+3 Sum : Find triplets that add up to a zero
+Problem Statement: Given an array of N integers, your task is to find unique triplets that add up to give a sum of zero. In short, you need to return an array of all the unique triplets [arr[a], arr[b], arr[c]] such that i!=j, j!=k, k!=i, and their sum is equal to zero.
+
+Brute Force Approach
+Algorithm
+Intuition:
+This method is simple. We check every possible group of three numbers using three loops. If their sum equals the target (0), we keep them. Before storing, we sort the triplet so that we only keep unique ones.
+
+Algorithm:
+The steps are:
+
+Use a set because we need only unique triplets.
+Run the first loop from the start to the end of the array.
+Inside it, run the second loop from the next position to the end.
+Then run the third loop from the next position after the second loop to the end.
+For every three numbers, check if their sum equals 0. If yes, sort the triplet and add it to the set.
+At the end, return all triplets from the set.
+
+Code:
+class Solution:
+    def threeSum(self, nums: List[int]) -> List[List[int]]:
+        ans=[]
+        n=len(nums)
+        for i in range(n):
+            for j in range(i+1,n):
+                for k in range(j+1,n):
+                    if(nums[i]+nums[j]+nums[k]==0):
+                        if(sorted([nums[i],nums[j],nums[k]]) not in ans):
+                            ans.append(sorted([nums[i],nums[j],nums[k]]))
+        return ans
+-------------------------------------------------------------------
+Complexity Analysis
+
+Time Complexity: O(N3 * log(no. of unique triplets)), where N = size of the array.
+Reason: Here, we are mainly using 3 nested loops. And inserting triplets into the set takes O(log(no. of unique triplets)) time complexity. But we are not considering the time complexity of sorting as we are just sorting 3 elements every time.
+
+Space Complexity: O(2 * no. of the unique triplets) as we are using a set data structure and a list to store the triplets.
+==========================================================================
+
+Optimal Approach
+Algorithm
+Intuition
+This is an improved version of the previous solution. We remove the extra set (used for unique triplets) and HashSet (used for quick searching).
+
+By sorting the array first, we can:
+
+Easily skip repeated numbers by checking if the current number is the same as the previous one.
+Ensure all triplets are unique without storing them in a set.
+Instead of using a HashSet to find triplets, we use the two-pointer method:
+
+One pointer moves forward from the left, the other backward from the right.
+We adjust their positions depending on whether the total is greater than, less than, or equal to the target.
+Approach
+Sort the array first.
+Fix the first number using a loop from the beginning to the end of the array.
+Skip the number if it is the same as the previous one (to avoid duplicates).
+Use two pointers:
+Left: starts right after the fixed number.
+Right: starts from the last element of the array.
+While the left pointer is before the right pointer:
+If the total is greater than 0 → move the right pointer one step left.
+If the total is less than 0 → move the left pointer one step right.
+If the total equals 0 → store the triplet, then move both pointers while skipping duplicates.\
+
+code:
+
+class Solution:
+    def threeSum(self, nums: List[int]) -> List[List[int]]:
+        ans=[]
+        n=len(nums)
+        nums.sort()
+        for  i in range(n-2):
+            if(i>0 and nums[i]==nums[i-1]):
+                continue
+            left=i+1
+            right=n-1
+            while(left<right):
+                if(nums[i]+nums[left]+nums[right]<0):
+                    left+=1
+                elif(nums[i]+nums[left]+nums[right]>0):
+                    right-=1
+                else:
+                    ans.append([nums[i],nums[left],nums[right]])
+                    while(left<right and nums[left]==nums[left+1]):
+                        left+=1
+                    while(left<right and nums[right]==nums[right-1]):
+                        right-=1
+                    left+=1
+                    right-=1    
+        return ans
+
+---------------------------------
+complexity analysis:
+
+T.C:O(n^2)
+S.C:O(1)
+================================================
