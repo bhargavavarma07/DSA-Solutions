@@ -1,0 +1,47 @@
+3 sum:
+better approach:
+Algorithm
+Intuition
+Earlier, we used three loops to find triplets that sum to zero. But now, we aim to do the same using just two loops. To do this, we will calculate the third number needed to complete the triplet instead of looping to find it.
+
+The idea is simple: if we already have two numbers, we can figure out what the third number should be to make the sum zero. Instead of checking all possible third numbers, we just check if this required number is already present using a set, which helps us search quickly.
+
+But we have to be careful. We cannot put all numbers in the set from the beginning. If we do that, we might accidentally use the same number again from the same position, which is not allowed. That’s why we only put numbers into the set after using them in the second loop.
+
+Approach
+Start by creating a set to store the final unique triplets.
+Use the first loop to go through each number one by one.
+Before starting the second loop, create another set to help find the third number.
+Now run the second loop, picking another number after the current one from the first loop.
+Check what number is needed to complete the triplet so that the total is zero.
+If this number is already present in the set, it means we found a valid triplet. Sort it and add it to the answer set.
+After checking, add the current number to the set so it can be used in future checks.
+Finally, after both loops finish, return all the triplets collected in the set.
+
+code:
+class Solution:
+    def threeSum(self, nums: List[int]) -> List[List[int]]:
+        ans=set()#better approach
+        n=len(nums)
+        for i in range(n):
+            hashset=set()
+            for j in range(i+1,n):
+                third= -(nums[i]+nums[j])
+                if third in hashset:
+                    triplet=tuple(sorted([nums[i],nums[j],third]))
+                    ans.add(triplet)
+                hashset.add(nums[j])
+        return [list(x) for x in ans]    
+
+time complexity:
+
+Complexity Analysis
+
+Time Complexity: O(N2 * log(no. of unique triplets)),
+as we are mainly using 3 nested loops. And inserting triplets into the set takes O(log(no. of unique triplets)) time complexity. But we are not considering the time complexity of sorting as we are just sorting 3 elements every time.
+
+Space Complexity: O(2 * no. of the unique triplets) + O(N) as we are using a set data structure and a list to store the triplets and extra O(N) for storing the array elements in another set.
+
+
+
+    
