@@ -1,0 +1,71 @@
+Largest subarray with 0 sum
+Given an array arr[] containing both positive and negative integers, the task is to find the length of the longest subarray with a sum equals to 0.
+
+Note: A subarray is a contiguous part of an array, formed by selecting one or more consecutive elements while maintaining their original order.
+Examples:
+
+Input: arr[] = [15, -2, 2, -8, 1, 7, 10, 23]
+Output: 5
+Explanation: The longest subarray with sum equals to 0 is [-2, 2, -8, 1, 7]
+
+Brute Force Approach:
+algorithm:
+Just try all the possible subarrays using three nested loops or two nested loops,and check whether sum is equal to zero
+and update the max length of the string
+
+code:
+class Solution:
+    def maxLength(self, arr):
+        # code here
+        mx=0
+        n=len(arr)
+        for i in range(n):
+            Sum=arr[i]
+            if(Sum==0):
+                if(1>mx):
+                    mx=1
+            for j in range(i+1,n):
+                Sum+=arr[j]
+                if(Sum==0):
+                    l=j-i+1
+                    if(l>mx):
+                        mx=l
+        return mx
+----------------------------------
+Complexity analysis:
+T.C:O(n^2)
+S.C:O(1)
+====================================
+Optimal Approach:
+i)In this approach ,first i taken a dictionary and stored the sums as keys and index as values by traversing the array
+ii)now i have traversed the array again ,and tracked the sum,and if sum==0 or sum is in dictionary then i finded the lenth of the substring and updated max length
+-->i got this idea by analyzing the example and writing the sums of all numbers at corresponding indices and then i observed a pattern
+
+code:
+class Solution:
+    def maxLength(self, arr):
+        # code here
+        d={}
+        mx=0
+        n=len(arr)
+        Sum=0
+        for i in range(n):
+            Sum+=arr[i]
+            if(Sum not in d):
+                d[Sum]=i
+        Sum=0
+        for i in range(n):
+            Sum+=arr[i]
+            if(Sum==0):
+                l=i+1
+                if(l>mx):
+                    mx=l
+            elif(Sum in d.keys()):
+                l=i-d[Sum]
+                if(l>mx):
+                    mx=l
+        return mx
+----------------------------------
+Complexity Analysis:
+Time Complexity:O(n),where n is the length of the string
+Space complexity:O(1) ,as we are using fixed size hash array and not using any hash array with growing size
