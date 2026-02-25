@@ -1,0 +1,83 @@
+Count the number of subarrays with given xor K:
+Problem Statement: Given an array of integers A and an integer B. Find the total number of subarrays having bitwise XOR of all elements equal to k.
+link:https://www.naukri.com/code360/problems/subarrays-with-xor-k_6826258
+Examples:
+Input: A = [4, 2, 2, 6, 4] , k = 6
+Output: 4
+Explanation: The subarrays having XOR of their elements as 6 are  [4, 2], [4, 2, 2, 6, 4], [2, 2, 6], [6]
+Input: A = [5, 6, 7, 8, 9], k = 5
+Output: 2
+Explanation: The subarrays having XOR of their elements as 5 are [5] and [5, 6, 7, 8, 9]
+
+
+Brute Force Algorithm:
+Approach:Just try all possible subarrays and check whether the xor of elements is equal to target,if equal just increment the count,and return count at end
+Code:
+ct=0
+for i in range(n):
+  for j in range(i+2,n):
+    for k in range(i,j):
+      xor=xor^arr[i]
+      if(xor==k):
+        ct+=1
+return ct
+
+-------------------------------------
+Complexity Analysis:
+T.C:O(n^3)
+S.C:O(1)
+====================================
+ii)Better Approach:
+implenting above approach but using two loops only
+code:
+def subarraysWithSumK(a: [int], b: int) -> int:
+    # Write your code here
+    ct=0
+    n=len(a)
+    for i in range(n):
+        x=a[i]
+        if(x==b):
+            ct+=1
+        for j in range(i+1,n):
+            x=x^a[j]
+            if(x==b):
+                ct+=1
+    return ct
+---------------------
+Complexity analysis:
+T.C:O(n^2)
+S.C:O(1)
+=========================================
+iii)Optimal approach:
+Approach:
+i)we will itravers the array ,and also perform xor operations on each which is inititialized with 0 ,
+ii)formulating x:while we traverse performing xor let us assume there is k(target) subarray from end,and then let the remaining part be x,so x^k=XOR
+iii)we will store the xor values if not there in hashmap and corresponding count of xor ,if there increment it
+iv)now after performing xor we will search x in hashmap ,and if present then increment the ct(answer) by the value of hashmap[x]
+v)hashmap will be initialized with 0:1 to also count individual subbarrays or single subarrays
+
+Code:
+def subarraysWithSumK(a: [int], b: int) -> int:
+    # Write your code here
+    hashmap={0:1}
+    ct=0
+    xor=0
+    k=b
+    for i in a:
+        xor=xor^i
+        if(xor not in hashmap):
+            hashmap[xor]=1
+        else:
+            hashmap[xor]+=1
+        x=xor^k
+        if(x in hashmap):
+            ct+=hashmap[x]
+    return ct        
+--------------------------------------------
+Complexity Analysis:
+T.C:O(n),for traversing array
+S.C:O(n),for storing frequency of xors in hashmap
+============================================
+
+
+
