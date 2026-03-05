@@ -1,0 +1,63 @@
+Maximum Product Subarray in an Array
+
+Problem Statement: Given an array that contains both negative and positive integers, find the maximum product subarray.
+
+Brute-Force Approach
+Algorithm
+In the brute force method, we generate all possible subarrays and calculate the product of each subarray. We track the maximum product found among all. Use two nested loops, the outer loop picks the starting index of the subarray and the inner loop picks the ending index. For every subarray defined by start and end, calculate the product and update the maximum product if the current subarray's product is larger.
+
+code:
+class Solution(object):
+    def maxProduct(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        mx=-10^55
+        n=len(nums)
+        for i in range(n):
+            p=1
+            for j in range(i,n):
+                p*=nums[j]
+                if(p>mx):   
+                    mx=p
+        return mx
+-------------------------------------
+Complexity Analysis
+Time Complexity: O(N^2), we check the product of all possible subarrays using two nested loops.
+Space Complexity: O(1), No extra space is used.
+==========================================
+Optimal Approach - 1
+Algorithm
+The product of elements in a subarray can become large when there are positive numbers, but negative numbers and zeros make it tricky. A negative number can flip a large product into a negative one, but if we meet another negative later, the sign flips back to positive. Therefore, to capture all possible max products, we do two things:
+Traverse the array from left to right (prefix) to build cumulative product.
+Traverse the array from right to left (suffix) to catch subarrays ending at the back (helpful when max product is at the end or due to even negatives).
+Reset the product to 1 whenever a zero is found, as it breaks the subarray continuity.
+By comparing products in both directions at each step, we ensure we don’t miss any possible maximum.
+
+Code:
+class Solution:
+    def maxProduct(self, nums: List[int]) -> int:
+        mx1=nums[0]
+        mx2=nums[-1]
+        n=len(nums)
+        p=1
+        for i in range(n):
+            p*=nums[i]
+            if(p>mx1):
+                mx1=p
+            if(nums[i]==0):
+                p=1
+        p=1
+        for i in range(n-1,-1,-1):
+            p*=nums[i]
+            if(p>mx2):
+                mx2=p
+            if(nums[i]==0):
+                p=1
+        return max(mx1,mx2)
+-----------------------------------------------------------
+Complexity Analysis
+Time Complexity: O(N), every element of array is visited once.
+Space Complexity: O(1) , only constant variables are used.
+============================================================
