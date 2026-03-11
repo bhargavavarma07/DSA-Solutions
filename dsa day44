@@ -1,0 +1,84 @@
+Count Occurrences in Sorted Array
+
+Problem Statement: You are given a sorted array containing N integers and a number X, you have to find the occurrences of X in the given array.
+
+Examples
+Example 1:
+Input:
+ N = 7,  X = 3 , array[] = {2, 2 , 3 , 3 , 3 , 3 , 4}
+Output
+: 4
+Explanation:
+ 3 is occurring 4 times in 
+the given array so it is our answer.
+
+Example 2:
+Input:
+ N = 8,  X = 2 , array[] = {1, 1, 2, 2, 2, 2, 2, 3}
+Output
+: 5
+Explanation:
+ 2 is occurring 5 times in the given array so it is our answer.
+
+Brute Force Approach
+Algorithm
+The approach is simple. We will linearly search the entire array, and try to increase the counter whenever we get the target value in the array. Using a for loop that runs from 0 to n - 1, containing an if the condition that checks whether the value at that index equals target. If true then increase the counter, at last return the counter.
+
+code:
+class Solution:
+    def countFreq(self, arr, target):
+        # code here
+        ct=0
+        for i in arr:
+            if(i==target):
+                ct+=1
+        return ct
+------------------------------------------------------
+Complexity Analysis
+
+Time Complexity: O(N), We are traversing the whole array.
+
+Space Complexity: O(1), as we are not using any extra space.
+============================================================
+Optimal Approach
+Algorithm
+In the previous article, we discussed how to find the first and the last occurrences of a number in a sorted array using Binary Search.
+
+The primary objective of the Binary Search algorithm is to efficiently determine the appropriate half to eliminate, thereby reducing the search space by half. It does this by determining a specific condition that ensures that the target is not present in that half.
+
+Now in order to solve this problem, we are going to use the previous concept. We will find the first and the last occurrences and figure out the number of occurrences like the following:
+
+Total number of occurrences = last occurrence - first occurrence + 1
+
+Algorithm:
+
+We will get the first and the last occurrences of the number using the function firstAndLastPosition(). For the implementation details of the function, please refer to the previous article.
+After getting the indices, we will check the following cases:
+If the first index == -1: This means that the target value is not present in the array. So, we will return 0 as the answer.
+Otherwise: We will find the total number of occurrences like this:
+The total number of occurrences  = (last index - first index + 1) and return this length as the answer.
+
+code:
+class Solution:
+    def countFreq(self, arr, target):
+        # code here
+        def search(x):
+            l=0
+            r=len(arr)
+            while(l<r):
+                mid=(l+r)//2
+                if(arr[mid]<x):
+                    l=mid+1
+                else:
+                    r=mid
+            return l
+        l=search(target)
+        h=search(target+1)-1
+        return h-l+1
+--------------------------------------------------------------
+Complexity Analysis
+
+Time Complexity: O(2*logN), We are basically using the binary search algorithm twice.
+
+Space Complexity: O(1), as we are using no extra space.
+======================================================================
