@@ -1,0 +1,101 @@
+Find out how many times the array has been rotated
+
+Problem Statement: Given an integer array arr of size N, sorted in ascending order (with distinct values). Now the array is rotated between 1 to N times which is unknown. Find how many times the array has been rotated.
+
+Pre-requisites: Find minimum in Rotated Sorted Array,  Search in Rotated Sorted Array II & Binary Search algorithm
+
+Examples
+Input : arr = [4,5,6,7,0,1,2,3]
+Result: 4
+Explanation: The original array should be [0,1,2,3,4,5,6,7]. So, we can notice that the array has been rotated 4 times.
+
+Input : arr = [3,4,5,1,2]
+Output : 3
+Explanation: The original array should be [1,2,3,4,5]. So, we can notice that the array has been rotated 3 times.
+
+Brute force Approach
+Algorithm
+Imagine you wrote numbers on a circular track in increasing order and then rotated them. If you want to find how many times it’s been rotated, the most direct way is to restore it to the original sorted form and see how many positions everything has shifted. In brute force, we simply search for the smallest element in the array because it’s the point where the rotation happened its index directly tells us the rotation count. But brute force does this without thinking about sorted array properties just check every element one by one.
+
+Think of it like standing at the start of the circle and walking forward until you find the smallest number then count how many steps it took to get there. That step count is your answer.
+Store the first element as a reference.
+Initialize a variable to track the smallest element's index.
+Iterate through every element of the array.
+If you find an element smaller than the stored smallest, update the smallest and store its index.
+Once the loop ends, return the index of the smallest element that’s the number of rotations.
+
+code:
+class Solution:
+    def findKRotation(self, arr):
+        # code here
+        mn=0
+        for i in range(len(arr)):
+            if(arr[i]<arr[mn]):
+                mn=i
+        return mn
+----------------------------------------------
+Complexity Analysis
+Time Complexity: O(n),We scan the entire array once to find the smallest element, where n is the size of the array.
+
+Space Complexity: O(1),We only use a few extra variables to store the minimum value and its index, so the extra space used is constant.
+=================================================
+Better Approach
+Algorithm
+Think of the sorted array as a sorted belt of numbers. Rotation just cuts the belt at one position and reattaches it. The spot where the order breaks where a number is bigger than the next number is exactly where the cut happened. So instead of searching for the minimum value by comparing all values to a running minimum, just walk once through the array and find the first place where the sequence goes down. The rotation count is the number of steps from the start to that break point. If there’s no break, the array wasn’t rotated.
+Traverse the array from the first element to the second-last element.
+At each step, check if the current element is greater than the next element.
+If such a break is found, return the index of the next element (that index is the rotation count).
+If no break is found after the full pass, return 0 (array not rotated).
+
+code:
+class Solution:
+    def findKRotation(self, arr):
+        # code here
+        ct=0
+        n=len(arr)
+        for i in range(n-1):
+            if(arr[i]>arr[i+1]):
+                return i+1
+        return 0
+
+-----------------------------
+Complexity Analysis
+Time Complexity: O(n),We traverse the array once to find the rotation point, where n is the size of the array.
+
+Space Complexity: O(1),Only a few extra variables are used regardless of input size, so constant space.
+=====================================
+Optimal Approach
+Algorithm
+Think of the rotated sorted array as two sorted halves the rotation “break” point is where the smallest element lives. Using binary search, we can efficiently zoom in on this smallest element by comparing middle elements to the rightmost element. If the middle element is greater than the rightmost element, the rotation point is to the right. Otherwise, it's to the left or could be the middle itself. This way, we reduce the search space by half each time, getting the rotation count in O(log n).
+
+Imagine searching for the break in a long sorted belt by cutting it in halves repeatedly instead of scanning all the way through.
+Initialize low = 0 and high = n - 1.
+While low is less than high:
+Find mid index.
+If the element at mid is greater than the element at high, the rotation point is after mid, so update low = mid + 1.
+Else, the rotation point is at mid or before it, so update high = mid.
+When low meets high, that index is the rotation count (index of smallest element).
+
+code:
+class Solution:
+    def findKRotation(self, arr):
+        # code here
+        mn=0
+        low=0
+        high=len(arr)-1
+        while(low<high):
+            mid=(low+high)//2
+            if(arr[mid]>arr[high]):
+                low=mid+1
+            else:
+                high=mid
+        return low
+
+-----------------------------------------------------
+Complexity Analysis
+Time Complexity: O(log n),The binary search halves the search space each iteration, where n is the size of the array.
+
+Space Complexity: O(1),Only a few variables are used regardless of input size, so constant extra space.
+====================================================
+
+        
