@@ -281,7 +281,47 @@ class Solution:
                 print(ans)
         return ans
 
-----------------------------------
+-------------------------------------
+Complexity Analysis
+Time Complexity: O(n * max(a[])), since for each possible speed we go through all the piles.
+Space Complexity: O(1), since the algorithm does not use any additional space or data structures.
+=======================================
+Optimal Approach
+Algorithm
+The naive method checks every speed, which is slow if the piles are large. But the possible answer space (from 1 to the maximum pile size) is sorted, meaning if a certain speed works, then all higher speeds will also work. This allows us to apply Binary Search on the answer space to efficiently find the minimum speed at which Koko can finish the bananas within the given hours.
+First, identify the largest pile size since the eating speed cannot be more than that.
+Set the search range with the lowest speed as 1 and the highest speed as the maximum pile size.
+Use binary search within this range to check possible speeds.
+At each step, take the middle value as the current speed and calculate how many hours it would take to finish all piles at this speed.
+If the total hours are less than or equal to the allowed hours, this speed is a candidate, so try to see if a smaller speed also works by moving left.
+If the total hours exceed the allowed hours, then the speed is too slow, so move right to try higher speeds.
+Continue this process until the range closes, and the smallest valid speed found will be the answer.
+
+code:
+import math
+class Solution:
+    def minEatingSpeed(self, piles: List[int], h: int) -> int:
+        def calc_Req_hours(arr,k):
+            total_hrs=0
+            for i in arr:
+                total_hrs+=math.ceil(i/k)
+            return total_hrs
+        ans=max(piles)
+        low=1
+        high=max(piles)-1
+        while(low<=high):
+            mid=(low+high)//2
+            if(calc_Req_hours(piles,mid)>h):
+                low=mid+1
+            else:
+                high=mid-1
+        return low
+
+------------------------------------------------------------
+Complexity Analysis
+Time Complexity: O(N*log(max(a[]))), we apply binary search on our search space to reduce it into half at every step.
+Space Complexity: O(1), since the algorithm does not use any additional space or data structures.
+=============================================================
               
                        
                        
