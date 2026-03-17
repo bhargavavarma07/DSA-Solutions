@@ -1,0 +1,288 @@
+Q)Peak element in Array
+
+Problem Statement: Given an array of length N, peak element is defined as the element greater than both of its neighbors. Formally, if arr[i] is the peak element, arr[i - 1] < arr[i] and arr[i + 1] < arr[i]. Find the index(0-based) of a peak element in the array. If there are multiple peak numbers, return the index of any peak number.
+
+Examples
+Input: arr[] = {1,2,3,4,5,6,7,8,5,1}
+Output: 7
+Explanation: There is only 1 peak element, 8,  that is at index 7.
+Input: arr[] = {1,2,1,3,5,6,4} 
+Output: 1 
+Explanation : There are 2 peak numbers that are at indices 1 and 5. We can return any of them.
+
+Brute Force Approach
+Algorithm
+A peak element in an array refers to the element that is greater than both of its neighbors. Basically, if arr[i] is the peak element, arr[i] > arr[i-1] and arr[i] > arr[i+1].
+
+Now if we want to visualize an array with the peak elements from the graphical point of view, there can be 4 cases:
+
+Case 1: An array with a single peak number:
+
+Case 2: An array with multiple peaks:
+
+Case 3: Last element as peak element:
+
+Case 4: First element as peak element:
+
+The brute force approach to find peak element is to traverse the entire array and compare the current element with both of its neighbours. If it is greater than both of its neighbours we can simply return it as our peak element.
+
+For the elements at first and last index, since both the neighbours are not available, we can just check their only neighbour element and return if its a peak element or not.
+
+code:
+  class Solution(object):
+    def findPeakElement(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        n=len(nums)
+        if(n==1):
+            return 0
+        else:
+            if(nums[0]>nums[1]):
+                return 0
+            if(nums[-1]>nums[-2]):
+                return n-1
+            for i in range(1,n-1):
+                if(nums[i]>nums[i+1] and nums[i]>nums[i-1]):
+                    return i
+ -----------------------------------------------------------------
+Complexity Analysis.
+Time Complexity: O(N), we traverse the entire array once to find peak element.
+Space Complexity: O(1), constant additional space is used.
+======================================================================
+Optimal Approach
+Algorithm
+To optimize our solution even further, we can use binary search algorithm. The primary objective of the Binary Search algorithm is to efficiently determine the appropriate half to eliminate, thereby reducing the search space by half. It does this by determining a specific condition that ensures that the target is not present in that half.
+
+To know how to eliminate the half efficiently, we can clearly notice a striking distinction between the left and right halves of the peak element in the array. The left half of the peak element has an increasing order whereas the right half of the peak element has a decreasing order.
+
+Thus we know that if current element is greater than its left neighbour, we are in the left half and if our current element is greater than its right neighbour then we are in the right half. If we know the half that we are in currently, we can eliminate it to find our peak element.
+
+In addition to the two cases above, we can have two more cases. One, where the current element itself is the peak or where the current element is a common point where a decreasing sequence ends and an increasing sequence begins. In either cases we can eliminate any of the halves, as the other half will also contain a peak element.
+Initialize the search space to the full range of the array.
+Find the middle index of the current search range.
+Check if the middle element is greater than its right neighbor.
+If yes, then a peak must exist in the left half (including mid), so shrink the right bound.
+Otherwise, the peak must lie in the right half (excluding mid), so shift the left bound.
+Continue until the search space converges to a single element.
+This final position is the index of a peak element.
+
+code:
+class Solution:
+    def findPeakElement(self, nums: List[int]) -> int:
+        n=len(nums)
+        if(n==1):
+            return 0
+        else:
+            if(nums[0]>nums[1]):
+                return 0
+            if(nums[-1]>nums[-2]):
+                return n-1
+            low=1
+            high=n-2
+            while(low<=high):
+                mid=(low+high)//2
+                if(nums[mid]>nums[mid+1] and nums[mid]>nums[mid-1]):
+                    return mid
+                elif(nums[mid+1]>nums[mid]):
+                    low=mid+1
+                else:
+                    high=mid-1            
+--------------------------------------
+ Complexity Analysis.
+Time Complexity: O(log N), we reduce the search space to half at every step using binary search.
+Space Complexity: O(1), constant additional space is used.
+====================================================================
+  
+====================================================================
+
+Q)Finding Sqrt of a number using Binary Search
+
+Problem Statement: You are given a positive integer n. Your task is to find and return its square root. If ‘n’ is not a perfect square, then return the floor value of sqrt(n).
+
+Examples
+Input: N = 36
+Output: 6
+Explanation: Square root of 36 is 6. 
+Input: N = 28
+Output: 5
+Explanation: Square root of 28 is approximately 5.292. So, the floor value will be 5. 
+
+Brute-Force Approach
+Algorithm
+The idea is that the square root of a number n will always lie between 1 and n. So, we can linearly search in this range to find the largest integer x such that square of x is less than or equal to number n.
+Start by creating a variable called ans to hold the result and run a loop from 1 up to n.
+While the square of the current number is less than or equal to n, keep updating ans with that number.
+As soon as the square of the number becomes greater than n, stop the loop because no bigger number can be the answer.
+At the end, the value stored in ans will be the integer square root of n.
+
+code:
+class Solution:
+    def floorSqrt(self, n): 
+        # code here
+        ans=1
+        for i in range(1,n//2+1):
+            if(i*i<=n):
+                ans=i
+        return ans
+ ---------------------------------------------
+Complexity Analysis
+Time Complexity: O(N), we check for every number from 1 to N.
+Space Complexity: O(1), since the algorithm does not use any additional space or data structures.
+==================================================
+Optimal Approach
+Algorithm
+The naive method tries every number, which is slow when n is large. But our possible answer space (from 1 to n) is sorted, meaning if a certain number squared is less than or equal to n, then all smaller numbers will also work. This allows us to apply Binary Search on the answer space to efficiently find the largest number whose square is less than or equal to n.
+First, note that the answer lies between 1 and the given number n.
+Set the search range with the smallest value as 1 and the largest value as n.
+Use binary search within this range to test possible numbers.
+At each step, take the middle number and check if its square is less than or equal to n.
+If it is, record this number as a candidate and move right to check for a larger number.
+If the square is greater than n, move left to check smaller numbers.
+Continue this process until the range closes, and the largest recorded number will be the square root.
+
+code:
+class Solution:
+    def floorSqrt(self, n): 
+        # code here
+        low=1
+        high=n//2
+        ans=1
+        while(low<=high):
+            mid=(low+high)//2
+            if(mid*mid<=n):
+                ans=max(ans,mid)
+                low=mid+1
+            else:
+                high=mid-1
+        return ans
+----------------------------------------------------
+Complexity Analysis
+Time Complexity: O(log(N)), we apply binary search on our search space to reduce it into half at every step.
+Space Complexity: O(1), since the algorithm does not use any additional space or data structures.
+===================================================
+
+===================================================
+Q)Nth Root of a Number using Binary Search
+Problem Statement: Given two numbers N and M, find the Nth root of M. The nth root of a number M is defined as a number X when raised to the power N equals M. If the 'nth root is not an integer, return -1.
+
+Examples
+Input: N = 3, M = 27
+Output: 3
+Explanation: The cube root of 27 is equal to 3.
+Input : N = 4, M = 69
+Output: -1
+Explanation : The 4th root of 69 does not exist. So, the answer is -1.
+
+Brute-Force Approach
+Algorithm
+To find the nth root of a number m, we want to find a number x such that x^n = m. The naive approach to solve this is to linearly search for every possible number. Using linear search, we start from 1 and gradually try increasing values, checking if raising them to the power n gets us close to or exactly equals m.
+Start a loop from 1 to m for linear search.
+For each value in the loop, compute the value raised to power n.
+If the result equals m, return that value.
+If the result exceeds m, break the loop as the nth root does not exist as an integer.
+If no exact match is found, return -1 to indicate failure.
+
+code:
+class Solution:
+    def nthRoot(self, n, m):
+       # code here
+        if(m==0 or m==1):
+            return m
+        for i in range(1,m//n+1):
+            if(i**n==m):
+                return i
+            
+        return -1
+    
+
+-----------------------------------------------------
+Complexity Analysis
+Time Complexity: O(M), we search for every possible number from 1 to M to check if it is the Nth root.
+Space Complexity: O(1), constant additional space is used.
+=======================================================
+
+Optimal Approach
+Algorithm
+To find the N-th root of a number M, instead of checking every number from 1 to M (which is inefficient), we use binary search to efficiently reduce the search space. Since the N-th root lies between 1 and M, we start with a search range from 1 to M. For each middle value in this range, we compute its N-th power by multiplying it with itself N times, without using built-in power functions (to avoid integer overflow). During this multiplication, if the result exceeds M, we stop early to save time. If the final result equals M, we’ve found the N-th root. Otherwise, we adjust our search range accordingly to continue the binary search. This method significantly speeds up the process by halving the range at each step.
+Start binary search with low as 1 and high as M.
+Find mid of the range and multiply it with itself N times to get Nth power of mid.
+If Nth power of mid equals M, return mid as the N-th root.
+If Nth power of mid is less than M, shift search to the right half.
+If Nth power of mid is greater than M, shift search to the left half.
+If no integer root is found after the loop, return -1.
+
+code:
+  class Solution:
+    def nthRoot(self, n, m):
+       # code here
+        if(m==0 or m==1):
+            return m
+        low,high=1,m//n
+        while(low<=high):
+            mid=(low+high)//2
+            if(mid**n==m):
+                return mid
+            elif(mid**n>m):
+                high=mid-1
+            else:
+                low=mid+1
+        return -1
+
+---------------------------------------------
+Complexity Analysis
+Time Complexity: O(logM), we search for every possible number from 1 to M to check if it is the Nth root.
+Space Complexity: O(1), constant additional space is used.
+=========================================================
+
+===========================================================
+Q)Koko Eating Bananas
+
+Problem Statement: A monkey Koko is given ‘n’ piles of bananas, whereas the 'ith' pile has ‘a[i]’ bananas. An integer ‘h’ is also given, which denotes the time (in hours) for all the bananas to be eaten.
+
+Each hour, the monkey chooses a non-empty pile of bananas and eats ‘k’ bananas. If the pile contains less than ‘k’ bananas, then the monkey consumes all the bananas and won’t eat any more bananas in that hour.
+
+Find the minimum number of bananas ‘k’ to eat per hour so that the monkey can eat all the bananas within ‘h’ hours.
+
+Examples
+Input: N = 4, a[] = {7, 15, 6, 3}, h = 8
+Output: 5
+Explanation:  If Koko eats 5 bananas/hr, he will take 2, 3, 2, and 1 hour to eat the piles accordingly. So, he will take 8 hours to complete all the piles.  
+Input: N = 5, a[] = {25, 12, 8, 14, 19}, h = 5
+Output: 25
+Explanation: If Koko eats 25 bananas/hr, he will take 1, 1, 1, 1, and 1 hour to eat the piles accordingly. 
+
+Brute-Force Approach
+Algorithm
+The problem is about finding the minimum eating speed such that Koko can finish all bananas within h hours. The extremely naive approach is to check all possible answers from 1 to max(a[]). The minimum number for which the required time is less than or equal to h is our answer.
+Find the largest pile size (max of the array).
+Loop through all possible speeds from 1 to this maximum value.
+For each speed, calculate the total hours needed. For each pile, compute the time as ceil(pile / speed).
+Sum up the hours for all piles.
+If the total hours is less than or equal to the allowed hours, return this speed as the answer.
+
+code:
+import math
+class Solution:
+    def minEatingSpeed(self, piles: List[int], h: int) -> int:
+        def calc_Req_hours(arr,k):
+            total_hrs=0
+            for i in arr:
+                total_hrs+=math.ceil(i/k)
+            return total_hrs
+        ans=max(piles)
+        for k in range(1,max(piles)+1):
+            req_hrs=calc_Req_hours(piles,k)
+            print(req_hrs)
+            if(req_hrs<=h):
+                ans=min(ans,k)
+                print("ans:")
+                print(ans)
+        return ans
+
+----------------------------------
+              
+                       
+                       
+
