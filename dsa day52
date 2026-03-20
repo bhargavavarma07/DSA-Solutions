@@ -1,0 +1,272 @@
+Q)Find the Smallest Divisor Given a Threshold
+
+
+Problem Statement: You are given an array of integers 'arr' and an integer i.e. a threshold value 'limit'. Your task is to find the smallest positive integer divisor, such that upon dividing all the elements of the given array by it, the sum of the division's result is less than or equal to the given threshold value.
+
+Examples
+Example 1:
+Input Format: N = 5, arr[] = {1,2,3,4,5}, limit = 8
+Result: 3
+Explanation: We can get a sum of 15(1 + 2 + 3 + 4 + 5) if we choose 1 as a divisor. 
+The sum is 9(1 + 1 + 2 + 2 + 3)  if we choose 2 as a divisor. Upon dividing all the elements of the array by 3, we get 1,1,1,2,2 respectively. Now, their sum is equal to 7 <= 8 i.e. the threshold value. So, 3 is the minimum possible answer.
+
+Example 2:
+Input Format: N = 4, arr[] = {8,4,2,3}, limit = 10
+Result: 2
+Explanation: If we choose 1, we get 17 as the sum. If we choose 2, we get 9(4+2+1+2) <= 10 as the answer. So, 2 is the answer.
+
+Brute Force
+Algorithm
+We will run a loop from 1 to max element of the array to check all possible divisors.
+To calculate the result, we will iterate over the given array using a loop. Within this loop, we will divide each element in the array by the current divisor, and sum up the obtained ceiling values.
+Inside the outer loop, If result <= threshold: We will return d as our answer.
+Finally, if we are outside the nested loops, we will return -1.
+
+code:
+import math
+class Solution:
+    def smallestDivisor(self, nums: List[int], threshold: int) -> int:
+        mx=max(nums)
+        for i in range(1,mx+1):
+            Sum=0
+            for j in nums:
+                Sum+=math.ceil(j/i)
+            if(Sum<=threshold):
+                return i
+            
+--------------------------------------------------
+Complexity Analysis
+
+Time Complexity: O(max(arr[])*N), where max(arr[]) = maximum element in the array, N = size of the array. We are using nested loops. The outer loop runs from 1 to max(arr[]) and the inner loop runs for N times.
+
+Space Complexity: O(1). No extra space used
+================================================
+
+Optimal Approach
+Algorithm
+Intuition
+We are going to use the Binary Search algorithm to optimize the approach.
+
+Approach
+First, check if the number of elements is already greater than the allowed limit. If so, no answer is possible, so return -1.
+Then, identify the largest number in the list.
+Start with two markers , one at the smallest possible number (1), and another at the largest number in the list.
+Use a loop to narrow down the range. In each step, find the number that is in the middle of the current range.
+Check if using this middle number as a divisor results in a total that is within the allowed limit. This is done using a helper that adds up the rounded-up results of each division.
+If the result is within the allowed limit, it means this number might work, but a smaller one could be better. So, look in the lower half of the current range.
+If the result is too large, it means this number is too small. So, look in the upper half of the range instead.
+Repeat this process until the range closes. The smallest number that works will be pointed to by the left marker, and that's the answer.
+
+code:
+import math
+class Solution:
+    def checkDivisor(self,arr,div):
+        Sum=0
+        for i in arr:
+            Sum+=math.ceil(i/div)
+        return Sum
+
+    def smallestDivisor(self, nums: List[int], threshold: int) -> int:
+        high=max(nums)
+        low=1
+        while(low<=high):
+            mid=(low+high)//2
+            Sum=self.checkDivisor(nums,mid)
+            if(Sum<=threshold):
+                high=mid-1
+            else:
+                low=mid+1
+        return low
+------------------------------------------------
+Complexity Analysis
+
+Time Complexity:O(log(max(arr[]))*N), where max(arr[]) = maximum element in the array, N = size of the array. We are applying binary search on our answers that are in the range of [1, max(arr[])]. For every possible divisor ‘mid’, we call the sumByD() function. Inside that function, we are traversing the entire array, which results in O(N).
+
+Space Complexity: O(1), no extra space is used.
+=================================================
+
+==================================================
+
+Q)Capacity to Ship Packages within D Days
+
+Problem Statement: You are the owner of a Shipment company. You use conveyor belts to ship packages from one port to another. The packages must be shipped within 'd' days. The weights of the packages are given in an array 'of weights'. The packages are loaded on the conveyor belts every day in the same order as they appear in the array. The loaded weights must not exceed the maximum weight capacity of the ship. Find out the least-weight capacity so that you can ship all the packages within 'd' days .
+
+
+
+Examples
+
+Input: N = 5, weights = [5, 4, 5, 2, 3, 4, 5, 6], d = 5
+Output: 9
+Explanation: The minimum ship capacity needed to ship all packages within 5 days is 9.
+
+Input: N = 3, weights = [1, 2, 3, 4, 5], d = 2
+Output: 9
+Explanation: With a capacity of 9, the packages can be shipped in 2 days as [1,2,3,4] and [5].
+
+Brute Force Approach
+Algorithm
+The problem asks to find the minimum capacity of the ship such that all packages can be shipped within d days. A brute force way is to check every capacity starting from the maximum single package weight (since capacity can't be less than the heaviest package) up to the sum of all package weights (which guarantees all packages shipped in one day). For each capacity, simulate the shipping process day by day. The smallest capacity that ships all packages in ≤ d days is the answer.
+Find the maximum weight in the array (minimum capacity possible).
+Calculate the sum of all weights (maximum capacity possible).
+For each capacity from max weight to sum:
+Simulate shipping: load packages one by one until capacity is reached, then move to next day.
+If total days used is ≤ d, return that capacity.
+
+code:
+class Solution:
+    def NoOfDays(self,arr,wt):
+        Sum=0
+        d=0
+        for i in arr:
+            Sum+=i
+            if(Sum>wt):
+                d+=1
+                Sum=i
+        d+=1
+        return d
+    def shipWithinDays(self, weights: List[int], days: int) -> int:
+        mn=max(weights)
+        mx=sum(weights)
+        for i in range(mn,mx+1):
+            ans=self.NoOfDays(weights,i)
+            if(ans<=days):
+                return i
+
+--------------------------------------------
+Complexity Analysis
+
+Time Complexity: O((sum_weights - max_weight) * N), where N is the number of packages. For each capacity between max weight and total sum, we simulate shipping over N packages.
+
+Space Complexity: O(1), only constant extra space is used.
+
+==================================================
+Optimal Approach
+Algorithm
+We want to find the minimum ship capacity that allows shipping all packages within the given number of days. The capacity must be at least the heaviest package because you can’t split a package. At the same time, the capacity can be at most the sum of all packages (if you ship everything in one day). So the answer lies between these two extremes. Using binary search on this range lets us efficiently find the smallest capacity that works. For each candidate capacity, we check if it’s possible to ship all packages within the given days by greedily accumulating package weights until we reach capacity, then moving to the next day.
+Set the lower bound as the maximum weight in the packages.
+Set the upper bound as the sum of all package weights.
+While the lower bound is less than or equal to the upper bound, do:
+Pick the middle value between lower and upper bounds as the candidate capacity.
+Simulate shipping with this capacity: accumulate package weights until capacity is reached, then count a day and reset accumulation.
+If the number of days used is within the allowed days, move the upper bound down to try smaller capacities.
+If the number of days exceeds the allowed days, increase the lower bound to try larger capacities.
+Return the lower bound when the search finishes as the minimum capacity needed.
+
+code:
+class Solution:
+    def NoOfDays(self,arr,wt):
+        Sum=0
+        d=0
+        for i in arr:
+            Sum+=i
+            if(Sum>wt):
+                d+=1
+                Sum=i
+        d+=1
+        return d
+    def shipWithinDays(self, weights: List[int], days: int) -> int:
+        low=max(weights)
+        high=sum(weights)
+        while(low<=high):
+            mid=(low+high)//2
+            ans=self.NoOfDays(weights,mid)
+            if(ans<=days):
+                high=mid-1
+            else:
+                low=mid+1
+        return low
+--------------------------------------------------------------
+Complexity Analysis
+
+Time Complexity: O(N * log(S)), where N is number of packages and S is the search space (sum_weights - max_weight). Each binary search step takes O(N), repeated O(log S) times.
+
+Space Complexity: O(1), constant extra space used.
+==============================================================
+
+==============================================================
+Q)Kth Missing Positive Number
+
+Problem Statement: You are given a strictly increasing array ‘vec’ and a positive integer 'k'. Find the 'kth' positive integer missing from 'vec'.
+
+Examples
+Example 1:
+Input Format: vec[]={4,7,9,10}, k = 1
+Result: 1
+Explanation: The missing numbers are 1, 2, 3, 5, 6, 8, 11, 12, ……, and so on. Since 'k' is 1, the first missing element is 1.
+
+Example 2:
+Input Format: vec[]={4,7,9,10}, k = 4
+Result: 5
+Explanation: The missing numbers are 1, 2, 3, 5, 6, 8, 11, 12, ……, and so on. Since 'k' is 4, the fourth missing element is 5.
+
+Brute Force Approach
+Algorithm
+We will use a loop to traverse the array.
+Inside the loop,
+If vec[i] <= k: we will simply increase the value of k by 1.
+Otherwise, we will break out of the loop.
+Finally, we will return the value of k.
+
+code:
+class Solution:
+    def findKthPositive(self, arr: List[int], k: int) -> int:
+        ans=[x for x in range(1,2000+1)]
+        d=0
+        for i in ans:
+            if(i not in arr):
+                d+=1
+                if(d==k):
+                    return i
+---------------------------------------------------------
+Complexity Analysis
+Time Complexity: O(N), where N = size of the given array.
+
+Space Complexity: O(1), no extra space used.
+=======================================================
+
+Optimal Approach
+Algorithm
+We cannot apply binary search on the answer space here as we cannot assure which missing number has the possibility of being the kth missing number. That is why, we will do something different here. We will try to find the closest neighbors (i.e. Present in the array) for the kth missing number by counting the number of missing numbers for each element in the given array.
+
+Algorithm
+Start by setting two markers: one at the beginning and one at the end of the list.
+Keep checking the middle position between the two markers by taking their average.
+Count how many numbers are missing up to that middle position by subtracting the expected number from the actual number found at that point.
+If the number of missing values is less than the desired position, move your focus to the right side of the list by shifting the beginning marker ahead.
+If not, move your focus to the left side by shifting the end marker backward.
+Once you've narrowed down the search and exited the loop, return the final answer by adding the desired position to the last marker you checked (plus one).
+
+code:
+class Solution: 
+    def searchs(self,arr,k):
+        low=0
+        high=len(arr)-1
+        while(low<=high):
+            mid=(low+high)//2
+            if(k==arr[mid]):
+                return 0
+            elif(arr[mid]<k):
+                low=mid+1
+            else:
+                high=mid-1
+        return 1
+
+    def findKthPositive(self, arr: List[int], k: int) -> int:
+        ans=[x for x in range(1,2000+1)]
+        d=0
+        for i in ans:
+            if(self.searchs(arr,i)):
+                d+=1
+                if(d==k):
+                    return i
+            
+
+-------------------------------------------------------------------------
+Complexity Analysis
+Time Complexity: O(logn), used for typical binary search
+
+Space Complexity: O(1), no extra space used
+=======================================================================
+        
+
+        
