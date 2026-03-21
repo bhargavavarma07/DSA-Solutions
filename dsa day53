@@ -1,0 +1,120 @@
+Q)Aggressive Cows : Detailed Solution
+
+Problem Statement: You are given an array 'arr' of size 'n' which denotes the position of stalls. You are also given an integer 'k' which denotes the number of aggressive cows.
+You are given the task of assigning stalls to 'k' cows such that the minimum distance between any two of them is the maximum possible. Find the maximum possible minimum distance.
+
+Examples
+Example 1:
+Input Format:
+ N = 6, k = 4, arr[] = {0,3,4,7,10,9}
+Result:
+ 3
+Explanation:
+ The maximum possible minimum distance between any two cows will be 3 when 4 cows are placed at positions {0, 3, 7, 10}. Here the distances between cows are 3, 4, and 3 respectively. We cannot make the minimum distance greater than 3 in any ways.
+
+Example 2:
+Input Format:
+ N = 5, k = 2, arr[] = {4,2,1,3,6}
+Result:
+ 5
+Explanation:
+ The maximum possible minimum distance between any two cows will be 5 when 2 cows are placed at positions {1, 6}. 
+Brute Force Approach
+Algorithm
+Intuition
+The basic idea is to test every possible distance between 1 and the difference between the farthest and nearest stalls. The largest distance for which canWePlace() returns true will be our answer.
+
+Algorithm:
+Sort the stalls array in increasing order.
+Use a loop to check every possible distance one by one.
+For each distance, call the canWePlace() function to see if all cows can be placed:
+If canWePlace() returns false for a distance, return the previous distance (current distance - 1), as that was the largest distance where placement was possible.
+If the loop finishes without failure, return the largest possible distance (difference between farthest and nearest stalls).
+
+class Solution:
+    def canWePlace(self,arr,dist,cows):
+        ctcow=1
+        last=arr[0]
+        for i in range(1,len(arr)):
+            if(arr[i]-last>dist):
+                ctcow+=1
+                last=arr[i]
+                if(ctcow==cows):
+                    return True
+        return False
+    def aggressiveCows(self, stalls, k):
+        # code here
+        stalls.sort()
+        for i in range(1,stalls[-1]-stalls[0]+1):
+            if(self.canWePlace(stalls,i,k)):
+                continue
+            else:
+                return i
+
+----------------------------------------------------------------
+Complexity Analysis
+
+Time Complexity: O(NlogN) + O(N *(max(stalls[])-min(stalls[]))), where N = size of the array, max(stalls[]) = maximum element in stalls[] array, min(stalls[]) = minimum element in stalls[] array.
+
+Space Complexity: O(1) as we are not using any extra space to solve this problem.
+==================================================================
+
+Optimal Approach
+Algorithm
+We use Binary Search to optimize the solution by reducing the answer space in half each time.
+
+The main idea of Binary Search is to determine which half of the search space can be eliminated based on a specific condition, thus minimizing unnecessary checks.
+
+The answer space is sorted: 1 to the difference between max and min values. We can divide this space into two parts:
+
+One containing valid answers.
+The other containing non-viable options.
+Example: For stalls = {1, 2, 8, 4, 9}, the possible distances are shown below:
+
+
+
+Sort the stalls: Arrange the stalls in ascending order.
+Set the search range:
+Start with the smallest possible distance.
+The largest possible distance is the gap between the farthest and nearest stalls.
+Use Binary Search: Repeat the process until the search range is exhausted:
+Pick the middle distance: Test this distance as a possible answer.
+Check if it works:
+If it works: Try to increase the distance to see if a larger one is possible.
+If it doesn’t work: Decrease the distance and test smaller ones.
+Return answer: After exiting the loop, high holds the largest valid distance.
+
+code:
+class Solution:
+    def canWePlace(self,arr,dist,cows):
+        ctcow=1
+        last=arr[0]
+        for i in range(1,len(arr)):
+            if(arr[i]-last>dist):
+                ctcow+=1
+                last=arr[i]
+                if(ctcow==cows):
+                    return True
+        return False
+    def aggressiveCows(self, stalls, k):
+        # code here
+        stalls.sort()
+        low=1
+        high=stalls[-1]-stalls[0]
+        while(low<=high):
+            mid=(low+high)//2
+            if(self.canWePlace(stalls,mid,k)):
+                low=mid+1
+            else:
+                high=mid-1
+        return high+1
+        
+---------------------------------------------------------------
+Complexity Analysis
+
+Time Complexity: O(NlogN) + O(N * log(max(stalls[])-min(stalls[]))), where N = size of the array, max(stalls[]) = maximum element in stalls[] array, min(stalls[]) = minimum element in stalls[] array.
+
+Space Complexity: O(1) as we are not using any extra space to solve this problem.
+=================================================================
+                
+        
