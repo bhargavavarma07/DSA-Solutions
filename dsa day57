@@ -1,0 +1,152 @@
+Median of Two Sorted Arrays of different sizes
+
+
+Problem Statement:
+Given two sorted arrays arr1 and arr2 of size m and n respectively, return the median of the two sorted arrays. The median is defined as the middle value of a sorted list of numbers. In case the length of the list is even, the median is the average of the two middle elements.
+
+Examples
+Disclaimer: Here is the practice link to help you assess your knowledge better. It's highly recommend trying to solve it before looking at the solution.
+Brute-Force Approach
+Algorithm
+The extremely naive approach is to merge the two sorted arrays and then find the median in that merged array.
+
+To merge the two arrays we will be applying the merge step of the merge sort algorithm. In that step, we essentially perform the same actions as required by this solution. By using two pointers on two given arrays, we fill up the elements into a third array.
+
+After merging, if the length of the new array is even, we return the average of the two middle elements or else we simply return the middle element as the median.
+code:
+class Solution:
+    def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:
+        i,j=0,0
+        k=0
+        arr=[0]*(len(nums1)+len(nums2))
+        while(i<len(nums1) and j<len(nums2)):
+            if(nums1[i]<=nums2[j]):
+                arr[k]=nums1[i]
+                k+=1
+                i+=1
+            else:
+                arr[k]=nums2[j]
+                k+=1
+                j+=1
+        while(i<len(nums1)):
+            arr[k]=nums1[i]
+            k+=1
+            i+=1
+        while(j<len(nums2)):
+            arr[k]=nums2[j]
+            k+=1
+            j+=1
+        n=len(nums1)+len(nums2)
+        if((len(nums1)+len(nums2))%2==1):
+            return arr[((len(nums1)+len(nums2))+1)//2-1]/1
+        else:
+            return (arr[n//2-1]+arr[n//2])/2
+
+        
+----------------------------------------
+Complexity Analysis
+Time Complexity: O(N1+N2)), every element of both array is visited once.
+Space Complexity: O(N1+N2), to store the merged array.
+==========================================
+Better Approach
+Algorithm
+To optimize the space used in the previous approach, we can eliminate the third array used to store the final merged result. After closer examination, we realize that we only need the two middle elements, rather than the entire merged array, to solve the problem effectively.
+
+We will stick to the same basic approach, but instead of storing elements in a separate array, we will use a counter to represent the imaginary third array's index. As we traverse through the arrays, when counter reaches the middle index, we will store that particular element. This way, we can achieve the same goal without using any extra space.
+
+code:
+from typing import List
+
+class Solution:
+    def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:
+        n1, n2 = len(nums1), len(nums2)
+        n = n1 + n2
+        idx2 = n // 2
+        idx1 = idx2 - 1
+        ct = -1
+        i = j = 0
+        val1 = val2 = 0
+
+        while i < n1 and j < n2:
+            if nums1[i] <= nums2[j]:
+                ct += 1
+                if ct == idx1: val1 = nums1[i]
+                if ct == idx2: val2 = nums1[i]
+                i += 1
+            else:
+                ct += 1
+                if ct == idx1: val1 = nums2[j]
+                if ct == idx2: val2 = nums2[j]
+                j += 1
+
+        while i < n1:
+            ct += 1
+            if ct == idx1: val1 = nums1[i]
+            if ct == idx2: val2 = nums1[i]
+            i += 1
+
+        while j < n2:
+            ct += 1
+            if ct == idx1: val1 = nums2[j]
+            if ct == idx2: val2 = nums2[j]
+            j += 1
+
+        if n % 2 == 1:
+            return float(val2)
+        return (val1 + val2) / 2.0
+----------------------------------------------
+Complexity Analysis
+Time Complexity: O(N1+N2), every element of both the arrays is visited once.
+Space Complexity: O(1), constant extra space is used.
+=================================================
+Optimal Approach
+Algorithm
+To find the median of two sorted arrays efficiently, we use binary search on the smaller array to minimize time complexity. The key idea is to partition both arrays such that the left half contains the smaller elements and the right half contains the larger elements. This way, the median lies at the boundary between the two halves.
+
+We choose a cut (partition) in the first array, and accordingly calculate the cut in the second array such that the total number of elements on the left side equals the number of elements on the right (or differs by one if the total number is odd). For the correct partition, the maximum of the left parts should be less than or equal to the minimum of the right parts.
+
+To check this, we compare the maximum of the left side from both arrays with the minimum of the right side. If the condition is not met, we move the binary search window either left or right depending on which condition fails. This process continues until we find the right partition.
+
+Once the correct partition is found, the median is calculated based on the total number of elements. If the total is even, we take the average of the two middle values (i.e., max of left part and min of right part). If the total is odd, the median is the max of the left part since it would be the middle element.
+
+code:
+from typing import List
+
+class Solution:
+    def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:
+        # Ensure nums1 is the smaller array
+        if len(nums1) > len(nums2):
+            nums1, nums2 = nums2, nums1
+
+        m, n = len(nums1), len(nums2)
+        imin, imax, half_len = 0, m, (m + n + 1) // 2
+
+        while imin <= imax:
+            i = (imin + imax) // 2
+            j = half_len - i
+
+            if i < m and nums2[j-1] > nums1[i]:
+                # i is too small, must increase it
+                imin = i + 1
+            elif i > 0 and nums1[i-1] > nums2[j]:
+                # i is too big, must decrease it
+                imax = i - 1
+            else:
+                # i is perfect
+                if i == 0: max_of_left = nums2[j-1]
+                elif j == 0: max_of_left = nums1[i-1]
+                else: max_of_left = max(nums1[i-1], nums2[j-1])
+
+                if (m + n) % 2 == 1:
+                    return float(max_of_left)
+
+                if i == m: min_of_right = nums2[j]
+                elif j == n: min_of_right = nums1[i]
+                else: min_of_right = min(nums1[i], nums2[j])
+
+                return (max_of_left + min_of_right) / 2.0
+--------------------------------------------------
+Complexity Analysis
+Time Complexity: O(log(min(n1,n2))), we are applying binary search on the range [0, min(n1, n2)].
+Space Complexity: O(1) , only constant variables are used.
+=================================
