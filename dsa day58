@@ -1,1 +1,101 @@
 Minimize Max Distance to Gas Station
+Problem Statement: You are given a sorted array ‘arr’ of length ‘n’, which contains positive integer positions of ‘n’ gas stations on the X-axis. You are also given an integer ‘k’. You have to place 'k' new gas stations on the X-axis. You can place them anywhere on the non-negative side of the X-axis, even on non-integer positions. Let 'dist' be the maximum value of the distance between adjacent gas stations after adding k new gas stations. Find the minimum value of ‘dist’.
+
+Examples
+Example 1:
+Input Format: N = 5, arr[] = {1,2,3,4,5}, k = 4
+Result: 0.5
+Explanation: One of the possible ways to place 4 gas stations is {1,1.5,2,2.5,3,3.5,4,4.5,5}. Thus the maximum difference between adjacent gas stations is 0.5. Hence, the value of ‘dist’ is 0.5. It can be shown that there is no possible way to add 4 gas stations in such a way that the value of ‘dist’ is lower than this. 
+
+Example 2:
+Input Format: N = 10, arr[] = {1,2,3,4,5,6,7,8,9,10}, k = 1
+Result: 1
+Explanation: One of the possible ways to place 1 gas station is {1,1.5,2,3,4,5,6,7,8,9,10}. Thus the maximum difference between adjacent gas stations is still 1. Hence, the value of ‘dist’ is 1. It can be shown that there is no possible way to add 1 gas station in such a way that the value of ‘dist’ is lower than this. 
+
+Brute Force
+Algorithm
+Approach
+First, we will declare an array ‘howMany[]’ of size n-1, to keep track of the number of placed gas stations.
+Next, using a loop we will pick k gas stations one at a time.
+Then, using another loop, we will find the index 'i' where the distance (arr[i+1] - arr[i]) is the maximum and insert the current gas station between arr[i] and arr[i+1] (i.e. howMany[i]++).
+Finally, after placing all the new stations, we will find the distance between two consecutive gas stations. For a particular section, distance = section_length / (number_of_stations_ inserted+1) = (arr[i+1]-arr[i]) / (howMany[i]+1)
+Among all the distances, the maximum one will be the answer.
+Code:
+class Solution:
+    def minMaxDist(self, stations, k):
+        # Code here
+        if(len(stations)==1):
+            return 0.00
+        HowManyPlacesReq=[0]*(len(stations)-1)
+        for j in range(k):
+            MaxValue=-1
+            MaxFind=-1
+            for i in range(len(stations)-1):
+                difference=stations[i+1]-stations[i]
+                SectionLength=difference/(HowManyPlacesReq[i]+1)
+                if(MaxValue<SectionLength):
+                    MaxValue=SectionLength
+                    MaxFind=i
+            
+                
+            #print(MaxFind)
+            HowManyPlacesReq[MaxFind]+=1
+        MaxAnswer=-1
+        for i in range(len(stations)-1):
+            difference=stations[i+1]-stations[i]
+            SectionLength=difference/(HowManyPlacesReq[i]+1)
+            MaxAnswer=max(MaxAnswer,SectionLength)
+        return MaxAnswer
+            
+        ----------------------------
+Complexity Analysis
+
+Time Complexity: O(k*n) + O(n), n = size of the given array, k = no. of gas stations to be placed.
+
+Space Complexity: O(n-1) as we are using an array to keep track of placed gas stations.
+==========================================
+
+Better Approach
+Algorithm
+Intuition
+In the previous approach, for every gas station, we were finding the index i for which the distance between arr[i+1] and arr[i] is maximum. After that, our job was to place the gas station. Instead of using a loop to find the maximum distance, we can simply use the heap data structure i.e. the priority queue.
+
+Approach
+First, we will declare an array ‘howMany[]’ of size n-1, to keep track of the number of placed gas stations and a priority queue that uses max heap.
+We will insert the first n-1 indices with the respective distance value, arrr[i+1]-arr[i] for every index.
+Next, using a loop we will pick k gas stations one at a time.
+Then we will pick the first element of the priority queue as this is the element with the maximum distance. Let’s call the index ‘secInd’.
+Now we will place the current gas station at ‘secInd’(howMany[secInd]++) and calculate the new section length, new_section_length = initial_section_length / (number_of_stations_ inserted+1) = (arr[secInd+1] - arr[secInd]) / (howMany[i] + 1)
+After that, we will again insert the pair into the priority queue for further consideration.
+After performing all the steps for k gas stations, the distance at the top of the priority queue will be the answer as we want the maximum distance.
+
+code:
+import heapq
+class Solution:
+    def minMaxDist(self, stations, k):
+        # Code here
+        heap=[]
+        ct=1
+        if(len(stations)==1):
+            return 0.00
+        for i in range(len(stations)-1):
+            dif=stations[i+1]-stations[i]
+            sec=dif/ct
+            heapq.heappush(heap,(-dif,1,dif))
+        for _ in range(k):
+            dif,ct,og=heapq.heappop(heap)
+            ct+=1
+            sec=og/ct
+            heapq.heappush(heap,(-sec,ct,og))
+        Ans=-heap[0][0]
+        return Ans
+------------------------------------------
+Complexity Analysis
+
+Time Complexity: O(nlogn + klogn), n = size of the given array, k = no. of gas stations to be placed.
+
+Space Complexity: O(n-1)+O(n-1). The first O(n-1) is for the array to keep track of placed gas stations and the second one is for the priority queue..
+=============================================
+
+        
+        
