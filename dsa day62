@@ -1,0 +1,61 @@
+Search in a row and column-wise sorted matrix
+
+
+Problem Statement: You have been given a 2-D array 'mat' of size 'N x M' where 'N' and 'M' denote the number of rows and columns, respectively. The elements of each row and each column are sorted in non-decreasing order. But, the first element of a row is not necessarily greater than the last element of the previous row (if it exists). You are given an integer ‘target’, and your task is to find if it exists in the given 'mat' or not.
+
+Examples
+Example 1:
+Matrix=
+1   4   7   11
+2   5   8   12
+3   6   9   16
+10 13  14  17
+Target: 9
+Output: Found at (2,2) (0-indexed)
+
+
+Example 2:
+Matrix=
+5   10  15
+6   12  18
+8   16  20
+Target: 7
+Output: Not Found
+
+Better Approach:
+
+Algorithm:
+
+We will use a loop to select a particular row at a time.
+Next, for every row, i, we will check if it contains the target using binary search.
+After applying binary search on row, if we found any element equal to the target, we will return true. Otherwise, we will move on to the next row.
+Finally, after completing all the row traversals, if we found no matching element, we will return false.
+
+class Solution:
+    def binarySearch(self,arr,target):
+        low=0
+        high=len(arr)-1
+        while(low<=high):
+            mid=(low+high)//2
+            if(arr[mid]==target):
+                return True
+            elif(arr[mid]<target):
+                low=mid+1
+            else:
+                high=mid-1
+        return False
+    def searchMatrix(self, matrix: List[List[int]], target: int) -> bool: 
+        for i in range(0,len(matrix)):
+            if(self.binarySearch(matrix[i],target)):
+                return True
+        return False
+
+
+-----------------------------
+Complexity Analysis
+
+Time Complexity: O(N*logM), where N = given row number, M = given column number. We are traversing all rows and it takes O(N) time complexity. And for all rows, we are applying binary search. So, the total time complexity is O(N*logM).
+
+Space Complexity: O(1) as we are not using any extra space.
+============================================
+
