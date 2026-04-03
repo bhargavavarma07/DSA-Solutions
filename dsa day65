@@ -1,0 +1,24 @@
+Median of Row Wise Sorted Matrix
+
+Problem Statement:
+Given a row-wise sorted matrix of size M*N, where M is no. of rows and N is no. of columns, find the median in the given matrix.
+Note: M*N is odd.
+Brute-Force Approach
+Algorithm
+The extremely naive approach is to use a linear array or list to store the elements of the given matrix and sort the list. We can return the middle element of sorted list to find the median.
+
+code:
+class Solution:
+    def median(self, mat):
+    	arr=[]
+    	for i in range(len(mat)):
+    	    for j in range(len(mat[0])):
+    	        if
+    	        arr.append(mat[i][j])
+    	        
+    	return arr[-1]
+-------------------------------------
+Complexity Analysis
+Time Complexity: O(M*N*(log(M*N))), sorting the linear array takes time complexity of O(M*N(logM*N)).
+Space Complexity: O(M*N), to create a linear array.
+====================================================
