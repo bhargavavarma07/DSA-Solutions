@@ -1,0 +1,83 @@
+https://leetcode.com/problems/find-a-peak-element-ii/
+1901. Find a Peak Element II
+
+A peak element in a 2D grid is an element that is strictly greater than all of its adjacent neighbors to the left, right, top, and bottom.
+
+Given a 0-indexed m x n matrix mat where no two adjacent cells are equal, find any peak element mat[i][j] and return the length 2 array [i,j].
+
+You may assume that the entire matrix is surrounded by an outer perimeter with the value -1 in each cell.
+
+You must write an algorithm that runs in O(m log(n)) or O(n log(m)) time.
+
+ 
+
+Example 1:
+
+
+
+Input: mat = [[1,4],[3,2]]
+Output: [0,1]
+Explanation: Both 3 and 4 are peak elements so [1,0] and [0,1] are both acceptable answers.
+Example 2:
+
+
+
+Input: mat = [[10,20,15],[21,30,14],[7,16,32]]
+Output: [1,1]
+Explanation: Both 30 and 32 are peak elements so [1,1] and [2,2] are both acceptable answers.
+
+better approach:
+just return maximum element
+code:
+class Solution:
+    def findPeakGrid(self, mat: List[List[int]]) -> List[int]:
+        mx=-1
+        ans_r=-1
+        ans_c=-1
+        for i in range(len(mat)):
+            for j in range(len(mat[0])):
+                if(mx<mat[i][j]):
+                    mx=mat[i][j]
+                    ans_r=i
+                    ans_c=j
+        return [ans_r,ans_c]
+
+------------------------------
+complexity:
+T.C:O(m*n)
+S.c:O(1)
+=============================
+optimal approach:
+find mid of rows ,and find the maximum elements col at that particular row,now compare with its top and bottom element if it greater than return mid and col,else if  top is greater than search upper space and eliminate th lower space,else eliminate upper space
+code:
+class Solution:
+    def findMaxCol(self,mat,mid):
+        mx=-1
+        for i in range(len(mat[0])):
+            if(mx<mat[mid][i]):
+                mx=mat[mid][i]
+                ans=i
+        return ans
+
+    def findPeakGrid(self, mat: List[List[int]]) -> List[int]:
+        m=len(mat)
+        n=len(mat[0])
+        low=0
+        high=m-1
+        while(low<=high):
+            mid=(low+high)//2
+            col=self.findMaxCol(mat,mid)
+            top=mat[mid-1][col] if mid-1>=0 else -1
+            down=mat[mid+1][col] if mid+1<m else -1
+            if(mat[mid][col]>top and mat[mid][col]>down):
+                return [mid,col]
+            elif(mat[mid][col]<top):
+                high=mid-1
+            else:
+                low=mid+1
+        
+
+---------------------------------------------
+T.C:O(nlog(m))
+S.C:O(1)
+=====================================
