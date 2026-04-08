@@ -1,0 +1,48 @@
+Q205)
+Given two strings `s` and `t`, determine if they are **isomorphic**. Two strings are isomorphic if the characters in `s` can be replaced to get `t`. All occurrences of a character must be replaced with another character while preserving the order of characters. No two characters may map to the same character, but a character may map to itself.
+
+---
+
+## **Example**
+* **Input:** `s = "egg"`, `t = "add"`
+    * **Output:** `True` (e $\to$ a, g $\to$ d)
+* **Input:** `s = "foo"`, `t = "bar"`
+    * **Output:** `False` (o cannot map to both 'a' and 'r')
+* **Input:** `s = "paper"`, `t = "title"`
+    * **Output:** `True` (p $\to$ t, a $\to$ i, e $\to$ l, r $\to$ e)
+
+---
+
+## **Approach**
+The solution uses a **Two-Way Hash Map** (Dictionary) strategy to enforce a strict **1-to-1 mapping** (bijection) between characters:
+
+1.  **Dual Mapping:** We maintain two dictionaries, `map_s_to_t` and `map_t_to_s`. This ensures that not only does `s[i]` map to `t[i]`, but `t[i]` is uniquely reserved for `s[i]`.
+2.  **Consistency Check:** As we iterate through the strings, we check if the current character pair contradicts any mapping we already established.
+3.  **Early Exit:** If a contradiction is found (e.g., 'a' was mapped to 'x', but now we see 'a' paired with 'y'), we immediately return `False`.
+4.  **Final Validation:** If we reach the end of the strings without contradictions, they are isomorphic.
+
+---
+
+## **Code**
+```class Solution:
+    def isIsomorphic(self, s: str, t: str) -> bool:
+        map_s_to_t={}
+        map_t_to_s={}
+        for char_s,char_t in zip(s,t):
+            if(char_s in map_s_to_t and map_s_to_t[char_s]!=char_t):
+                return False
+            if(char_t in map_t_to_s and map_t_to_s[char_t]!=char_s):
+                return False
+            map_s_to_t[char_s]=char_t
+            map_t_to_s[char_t]=char_s
+        return True
+
+
+
+```
+
+---
+
+## **Complexity Analysis**
+* **Time Complexity:** $O(N)$, where $N$ is the length of the strings. We traverse the strings exactly once, and dictionary lookups/insertions are $O(1)$ on average.
+* **Space Complexity:** $O(K)$, where $K$ is the size of the character set (e.g., 256 for ASCII). In the worst case, we store a mapping for every unique character. Since the character set size is usually fixed, this is often considered $O(1)$ auxiliary space.
