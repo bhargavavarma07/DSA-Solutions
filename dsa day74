@@ -1,0 +1,82 @@
+1614. Maximum Nesting Depth of the Parentheses
+
+Given a valid parentheses string s, return the nesting depth of s. The nesting depth is the maximum number of nested parentheses.
+
+ 
+
+Example 1:
+
+Input: s = "(1+(2*3)+((8)/4))+1"
+
+Output: 3
+
+Explanation:
+
+Digit 8 is inside of 3 nested parentheses in the string.
+
+Example 2:
+
+Input: s = "(1)+((2))+(((3)))"
+
+Output: 3
+
+Explanation:
+
+Digit 3 is inside of 3 nested parentheses in the string.
+
+Example 3:
+
+Input: s = "()(())((()()))"
+
+Output: 3
+
+ 
+
+Constraints:
+
+1 <= s.length <= 100
+s consists of digits 0-9 and characters '+', '-', '*', '/', '(', and ')'.
+It is guaranteed that parentheses expression s is a VPS.
+
+Approaches:
+1)using stack:
+
+code:
+class Solution:
+    def maxDepth(self, s: str) -> int:
+        stack,ans=[],0
+        for ch in s:
+            if(ch=='('):
+                stack.append(ch)
+            elif(ch==')'):
+                ans=max(ans,len(stack))
+                stack.pop()
+        return ans
+
+-------------------------------------
+complexity analysis:
+Time Complexity: (O(n))
+
+Space Complexity: (O(n))
+=====================================
+ 2) without stack:
+
+code:
+class Solution:
+    def maxDepth(self, s: str) -> int:
+        ct=0
+        ans=-1
+        for ch in s:
+            if(ch=='('):
+                ct+=1
+            if(ch==')'):
+                ans=max(ct,ans)
+                ct-=1
+        ans=max(ct,ans)
+        return ans
+-------------------------------------
+complexity analysis:
+Time Complexity: (O(n))
+
+Space Complexity: (O(1))
+=====================================
