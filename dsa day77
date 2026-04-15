@@ -1,0 +1,52 @@
+Substrings with K Distinct
+
+You are given a string s consisting of lowercase characters and an integer k, You have to count all possible substrings that have exactly k distinct characters.
+
+Examples :
+
+Input: s = "abc", k = 2
+Output: 2
+Explanation: Possible substrings are ["ab", "bc"]
+Input: s = "aba", k = 2
+Output: 3
+Explanation: Possible substrings are ["ab", "ba", "aba"]
+Input: s = "aa", k = 1
+Output: 3
+Explanation: Possible substrings are ["a", "a", "aa"]
+
+code:
+class Solution:
+    def countSubstr(self, s, k):
+        # Result = Substrings with (at most k) - (at most k-1)
+        return self.atMostK(s, k) - self.atMostK(s, k - 1)
+
+    def atMostK(self, s, k):
+        if k < 0: return 0
+        
+        l = 0
+        count = 0
+        char_freq = {}
+        distinct_elements = 0
+        
+        for r in range(len(s)):
+            # Add new character to window
+            if s[r] not in char_freq or char_freq[s[r]] == 0:
+                distinct_elements += 1
+            char_freq[s[r]] = char_freq.get(s[r], 0) + 1
+            
+            # Shrink window if distinct elements > k
+            while distinct_elements > k:
+                char_freq[s[l]] -= 1
+                if char_freq[s[l]] == 0:
+                    distinct_elements -= 1
+                l += 1
+            
+            # All substrings ending at 'r' and starting from any index between 'l' and 'r'
+            # satisfy the condition (at most k distinct chars).
+            count += (r - l + 1)
+            
+        return count
+
+-------------------
+T.C:O(n)
+S.C:O(1) or O(k)
