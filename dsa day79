@@ -1,0 +1,89 @@
+Insert at the head of a Linked List
+
+Problem Statement: Given a linked list and an integer value val, insert a new node with that value at the beginning (before the head) of the list and return the updated linked list.
+
+Examples
+Input: 0->1->2, val = 5 
+Output: 5->0->1->2
+Explanation: We need to insert the value 5 before the head of the given Linked List.
+
+Algorithm
+To insert a new node with a value before the head of the list, create a new node with the given value and point the new node to the head. This node will be the new head of the linked list.
+Create a new node with data as the given value and pointing to the head. This node will be our new head of the linked list.
+Now, return the new node as the head of the updated Linked List.
+
+code:
+'''    
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+'''
+
+class Solution:
+    def insertAtEnd(self, head, x):
+        #code here 
+        if not head:
+            head=Node(x)
+            return
+        curr=head.next
+        while curr.next!=None:
+            curr=curr.next
+        curr.next=Node(x)
+        return head
+             
+--------------------------------------------------
+Complexity Analysis
+Time Complexity: O(1), creating a new node and updating the head takes constant time.
+Space Complexity: O(1) , only one extra node is created to insert at the head of the linked list.
+======================================================
+
+
+Delete Last Node of Linked List
+
+Problem Statement: Given a Linked List, delete the tail of the list and print the updated list.
+
+Examples
+Approach
+Algorithm
+To delete the tail of a linked list, we update the linkage between its last node and its second last node. The main intuition is to point the second last node to null to get the updated linked list.
+
+Some edge cases to consider is when the list is empty or when there is only one node in the entire list.
+If the list is empty, return immediately as there is nothing to delete.
+If list has only one node, delete the node and return an empty list.
+Traverse the linked list to the second last node and keep track of it using the tail pointer.
+Set the next pointer of the second last node to null. This step effectively disconnects the initial tail node from the list, making second last node as the new tail node.
+Deallocate the memory occupied by the tail node by deleting it.
+Return the head of the doubly linked list as the result.
+
+Code:
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution:
+    def deleteNode(self, node):
+        """
+        :type node: ListNode
+        :rtype: void Do not return anything, modify node in-place instead.
+        """
+        # print(node)
+        # print(node.next)
+        # curr=node
+        # node=node.next
+        # curr.next=node
+        node.val=node.next.val
+        node.next=node.next.next
+    
+        #node=node.next
+        # while(curr.next!=node):
+        #     print(curr.val)
+        #     curr=curr.next
+        # curr.next=node.next
+---------------------------------------
+Complexity Analysis
+Time Complexity: O(1), creating a new node and updating the head takes constant time.
+Space Complexity: O(1) , only one extra node is created to insert at the head of the linked list.
+======================================================
