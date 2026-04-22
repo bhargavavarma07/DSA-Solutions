@@ -1,0 +1,92 @@
+Find the Length of a Linked List
+
+Problem Statement: Given the head of a linked list, print the length of the linked list.
+
+Examples
+Input: 0->1->2 
+Output: 3
+Explanation: The list has a total of 3 nodes, thus the length of the list is 3.
+
+Input: 12->5->8->7
+Output: 4
+Explanation: The list has a total of 4 nodes, thus the length of the list is 4.
+
+Approach
+Algorithm
+The simple idea to solve this problem is to traverse the linked list and count the number of nodes using a counter.
+Initialize a temporary pointer to the head of the list. The temporary pointer will be used to traverse the list.
+Traverse the linked list until the the current node is not null.
+At every node, increment the counter to count number of nodes.
+After reaching the end of the linked list, return the count. This will be your total number of nodes which is the length of the linked list.
+
+
+
+Code:
+'''
+Definition for Linked List
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+'''
+class Solution:
+    def getCount(self, head):
+        ct=1
+        if not head:
+            return 0 
+        curr=head.next
+        while curr:
+            ct+=1
+            curr=curr.next
+        return ct
+Complexity Analysis:
+Complexity Analysis
+Time Complexity: O(N), we traverse the entire linked list once to find the total number of nodes.
+Space Complexity: O(1) , we use fixed number of pointers and variables to find the length of linked list.
+=============================================================================================================
+Search an element in a Linked List
+
+Problem Statement: Given the head of a linked list and an integer value, find out whether the integer is present in the linked list or not. Return true if it is present, or else return false.
+
+Examples
+Input: 0->1->2, val = 2
+Output: True
+Explanation: Since element 2 is present in the list, return true.
+
+Input: 12->5->8->7, val = 6 
+Output: False
+Explanation: The list does not contain element 6. Therefore, return false.
+Approach
+Algorithm
+To check if an element is present in the linked list, traverse the entire list and at every node, check whether the data matches with the specified value. If a match is found, return true, otherwise, after traversing the entire list, return false.
+Initialise a temporary pointer to traverse the entire list.
+During the traversal, check if the data on the current node matches the specified value. If no match is found, move to the next node.
+Continue this traversal until either fast (or next node of fast) reaches null or both the pointers, slow and fast, meet.
+At any moment, if the data of the node matches with the val, stop and return true.
+If the temporary pointer reaches null without finding the required value, return false.
+
+Code:
+'''
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+'''
+
+class Solution:
+    def searchKey(self, head, key):
+        #Code here
+        if(head.data==key):
+            return True
+        curr=head.next
+        while curr:
+            if(curr.data==key):
+                return True
+            curr=curr.next
+        return False
+-----------------------------------------
+Complexity Analysis:
+Complexity Analysis
+Time Complexity: O(N), we traverse the entire linked list once in worst case to search for the required value.
+Space Complexity: O(1) , we use a constant amount of additional space, regardless of the linked list's length to search for an element.
+============================================
