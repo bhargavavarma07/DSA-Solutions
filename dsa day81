@@ -1,1 +1,67 @@
 learnt doubly linked lists
+Doubly Linked List from an Array
+
+Given an array arr[] of integers, the goal is to create a Doubly Linked List (DLL) where each element of the array is represented as a node. The nodes must be linked in the same sequence as the array, maintaining both forward (next) and backward (prev) connections. Return the head of the constructed doubly linked list.
+
+Examples:
+
+Input: arr[] = [1, 2, 3, 4]
+Output: 1 <-> 2 <-> 3 <-> 4
+Explanation: Each array element becomes a node in the doubly linked list. Node 1 connects forward to 2, and node 2 connects back to 1, and so on.
+
+'''
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+        self.prev = None
+'''
+
+class Solution:
+   def createDLL(self, arr):
+     # code here
+     
+     head=Node(arr[0])
+     curr=head#for traversing
+     for i in range(1,len(arr)):
+         curr.next=Node(arr[i])
+         curr.next.prev=curr
+         curr=curr.next
+     return head
+
+------------------------------------------
+Insertion at doubly linked list
+
+Given the head of a doubly-linked list, a position p, and an integer x. Add a new node with value x at the position just after pth node in the doubly linked list and return the head of the updated list.
+
+Note: The position is 0-based indexed.
+
+Examples:
+
+Input: p = 2, x = 6
+
+Output: 2 <-> 4 <-> 5 <-> 6
+Explanation: Insert a node of value 6 after the 2nd node.
+
+'''
+class Node:
+	def __init__(self, data):
+		self.data = data
+		self.next = None
+		self.prev = None
+
+'''
+
+class Solution:
+    def insertAtPos(self, head, p, x):
+        # Code Hereuy
+        pos=0
+        curr=head
+        while(pos!=p):
+            curr=curr.next
+            pos+=1
+        temp=curr.next
+        curr.next=Node(x)
+        curr.next.prev=curr
+        curr.next.next=temp
+        return head
